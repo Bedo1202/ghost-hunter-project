@@ -24,7 +24,7 @@ public class MainMenuView extends VBox {
 
         // 2. ARKA PLAN GÖRSELİ (menu_bg.png)
         try {
-            Image bg = new Image(getClass().getResourceAsStream("MainMenu2.png"));
+            Image bg = new Image(getClass().getResourceAsStream("Mainmenu.png"));
             BackgroundImage backgroundImage = new BackgroundImage(
                 bg,
                 BackgroundRepeat.NO_REPEAT,
