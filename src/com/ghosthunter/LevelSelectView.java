@@ -1,15 +1,24 @@
 package com.ghosthunter;
 
+
+/**
+ * Marmara University - CSE 1242 Term Project
+ * LevelSelectView Sınıfı - Harita Görselleri ve Arka Plan Problemini Çözen Versiyon
+ */
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
- * Grup Projesi - LevelSelectView Sınıfı
- * Amaç: PDF Sayfa 12'deki orijinal görsel üzerine tam oturan şeffaf/renkli dikey seçim alanları.
+ * Marmara University - CSE 1242 Term Project [cite: 7, 9]
+ * LevelSelectView Sınıfı - Kartların İçine Harita Görsellerini Tam Ortalar
  */
 public class LevelSelectView extends VBox {
 
@@ -18,76 +27,123 @@ public class LevelSelectView extends VBox {
     public LevelSelectView(SceneManager sceneManager) {
         this.sceneManager = sceneManager;
         
-        // 1. PANEL YERLEŞİM AYARLARI
-        this.setAlignment(Pos.CENTER); // Elemanları merkeze hizala
-        this.setSpacing(18); // Resimdeki mor kutuların arasındaki dikey boşluğa göre ayarlandı
-        this.setPadding(new Insets(120, 0, 0, 0)); // Kutuları dikeyde resmin üzerine tam oturtmak için üst boşluk
+        // 1. DÜZEN VE HİZALAMA AYARLARI
+        this.setAlignment(Pos.CENTER); 
+        this.setSpacing(15); 
+        this.setPadding(new Insets(20, 0, 20, 0));
 
-        // 2. ARKA PLAN GÖRSELİ (level_select_bg.png)
+        // 2. ANA ARKA PLAN GÖRSELİ (LevelSelect.png)
         try {
-        	Image bg = new Image(getClass().getResourceAsStream("LevelSelect.png"));
-            this.setBackground(new Background(new BackgroundImage(bg, 
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, 
-                BackgroundPosition.CENTER, new BackgroundSize(1024, 768, false, false, false, false))));
+            Image bg = new Image(getClass().getResourceAsStream("LevelSelect.png"));
+            BackgroundImage backgroundImage = new BackgroundImage(
+                bg,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(1024, 768, false, false, false, true)
+            );
+            this.setBackground(new Background(backgroundImage));
         } catch (Exception e) {
             this.setBackground(new Background(new BackgroundFill(Color.web("#150B24"), null, null)));
         }
 
-        // 3. RESİMDEKİ KUTULARIN ÜZERİNE GELECEK ETKİLEŞİMLİ ALANLAR (BUTONLAR)
-        // Yazı eklemiyoruz (""), çünkü resimde zaten Level 1, Level 2 yazıyor!
-        Button lvl1 = createTransparentLevelButton(1);
-        Button lvl2 = createTransparentLevelButton(2);
-        Button lvl3 = createTransparentLevelButton(3);
+        // 3. SEVİYE KARTLARININ OLUŞTURULMASI (Görseller ve Sayılar Üst Üste)
+        Button lvl1 = createLevelCard("1", "Level1.png", 1);
+        Button lvl2 = createLevelCard("2", "Level2.png", 2);
+        Button lvl3 = createLevelCard("3", "Level3.png", 3);
 
-        // 4. ANA MENÜYE DÖNÜŞ BUTONU (Resmin en altında boş bir yere konumlanır)
+        // 4. "BACK TO MENU" BUTONU
         Button backBtn = new Button("BACK TO MENU");
-        backBtn.setStyle("-fx-background-color: #555555; -fx-text-fill: white; -fx-font-weight: bold;");
-        backBtn.setPrefSize(140, 30);
-        backBtn.setOnAction(e -> sceneManager.showMainMenu());
+        backBtn.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        backBtn.setPrefSize(180, 40);
+        
+        Background defaultBackBg = new Background(new BackgroundFill(Color.web("#800080"), null, null));
+        Background clickBackBg = new Background(new BackgroundFill(Color.WHITE, null, null));
+        
+        backBtn.setBackground(defaultBackBg);
+        backBtn.setTextFill(Color.WHITE);
+        
+        backBtn.setOnMousePressed(e -> {
+            backBtn.setBackground(clickBackBg);
+            backBtn.setTextFill(Color.RED); // [cite: 158]
+        });
+        backBtn.setOnMouseReleased(e -> {
+            backBtn.setBackground(defaultBackBg);
+            backBtn.setTextFill(Color.WHITE);
+            sceneManager.showMainMenu();
+        });
 
-        // Hepsini sırayla ekrana diziyoruz
         this.getChildren().addAll(lvl1, lvl2, lvl3, backBtn);
     }
 
     /**
-     * PDF İsterleri:
-     * 1. Hover-over: Lighter purple (Hafif saydam açık mor)
-     * 2. Clicked state: White background, Red border/effect
+     * Döküman Sayfa 12 Kuralları: [cite: 166, 167, 168, 169]
+     * Harita görseli ve sayı StackPane ile üst üste bindirilir.
      */
-    private Button createTransparentLevelButton(int levelNum) {
-        Button btn = new Button(""); // İçi boş, resmi kapatmasın diye
-        
-        // Resimdeki mor kutuların tam boyutları (Genişlik: 420, Yükseklik: 110 civarı)
-        btn.setPrefSize(420, 110); 
+    private Button createLevelCard(String levelNumber, String imagePath, int levelNum) {
+        // Butonun metnini boş bırakıyoruz çünkü StackPane ile içeriği kendimiz dolduracağız
+        Button card = new Button();
+        card.setPrefSize(160, 95); // Dökümandaki dikdörtgen kart boyutları 
 
-        // Renk tanımlamaları (Resim alttan görünsün diye yarı saydam renkler kullanıyoruz)
-        Background transparentBg = new Background(new BackgroundFill(Color.TRANSPARENT, null, null));
-        
-        // Hover: PDF İsteri olan "Lighter Purple" (%40 opaklık verilerek arkadaki yazıların görünmesi sağlandı)
-        Background hoverBg = new Background(new BackgroundFill(Color.web("#BA55D3", 0.4), null, null)); 
-        
-        // Clicked: PDF İsteri olan "White" (%60 opaklık ile beyaz bir parlama efekti verir)
-        Background clickBg = new Background(new BackgroundFill(Color.web("#FFFFFF", 0.6), null, null));
+        // Renk Tanımlamaları [cite: 167, 168, 169]
+        Color normalPurple = Color.web("#800080");     
+        Color lighterPurple = Color.web("#BA55D3");    
+        Color clickedWhite = Color.WHITE;              
 
-        // İlk başta buton tamamen görünmezdir, alttaki harika görsel görünür
-        btn.setBackground(transparentBg);
-        btn.setBorder(Border.EMPTY);
+        // Katmanlı Düzen: Resim altta, yazı onun üstünde olacak
+        StackPane cardContent = new StackPane();
+        cardContent.setAlignment(Pos.CENTER);
 
-        // KURAL 1: Fare üzerine geldiğinde (Hover) kutu tatlı bir açık mora bürünür
-        btn.setOnMouseEntered(e -> btn.setBackground(hoverBg));
+        // 1. Katman: Küçük Harita Resmi 
+        try {
+            Image img = new Image(getClass().getResourceAsStream(imagePath));
+            ImageView imgView = new ImageView(img);
+            imgView.setFitWidth(130);  // Mor kutunun içine tam oturacak genişlik
+            imgView.setFitHeight(70);  // Mor kutunun içine tam oturacak yükseklik
+            imgView.setPreserveRatio(false); // Tam sığdırma zorlaması
+            cardContent.getChildren().add(imgView);
+        } catch (Exception e) {
+            System.out.println(imagePath + " harita resmi bulunamadı.");
+        }
 
-        // Fare çekildiğinde tekrar görünmez olur
-        btn.setOnMouseExited(e -> btn.setBackground(transparentBg));
+        // 2. Katman: Resmin Tam Üzerine Binecek Olan Beyaz Numara
+        Label numLabel = new Label(levelNumber);
+        numLabel.setFont(Font.font("Impact", FontWeight.BOLD, 32));
+        numLabel.setTextFill(Color.WHITE);
+        cardContent.getChildren().add(numLabel);
 
-        // KURAL 2: Tıklandığı an (Pressed) kutunun içi beyaz parlar
-        btn.setOnMousePressed(e -> btn.setBackground(clickBg));
+        // Oluşturduğumuz bu katmanlı yapıyı butonun içine grafik olarak gömüyoruz
+        card.setGraphic(cardContent);
 
-        // KURAL 3: Tıklama bırakıldığı an (Released) seviyeyi başlatır
-        btn.setOnMouseReleased(e -> {
-            btn.setBackground(transparentBg);
-            sceneManager.startLevel(levelNum);
+        // İlk Görünüm Ayarı [cite: 167]
+        card.setBackground(new Background(new BackgroundFill(normalPurple, new CornerRadii(6), null)));
+
+        // KURAL 1: Hover-over (Fare üzerine gelince) açık mor olur [cite: 168]
+        card.setOnMouseEntered(e -> {
+            if (card.getBackground().getFills().get(0).getFill() != clickedWhite) {
+                card.setBackground(new Background(new BackgroundFill(lighterPurple, new CornerRadii(6), null)));
+            }
         });
 
-        return btn;
+        card.setOnMouseExited(e -> {
+            if (card.getBackground().getFills().get(0).getFill() != clickedWhite) {
+                card.setBackground(new Background(new BackgroundFill(normalPurple, new CornerRadii(6), null)));
+            }
+        });
+
+        // KURAL 2: Clicked State (Tıklanınca) arka plan beyaz olur [cite: 169]
+        card.setOnMousePressed(e -> {
+            card.setBackground(new Background(new BackgroundFill(clickedWhite, new CornerRadii(6), null)));
+            numLabel.setTextFill(Color.web("#800080")); // Arka plan beyaz olunca yazı mor olsun ki okunsun
+        });
+
+        // KURAL 3: Released (Tıklama bırakılınca) seviye haritasını yükler [cite: 169]
+        card.setOnMouseReleased(e -> {
+            card.setBackground(new Background(new BackgroundFill(normalPurple, new CornerRadii(6), null)));
+            numLabel.setTextFill(Color.WHITE);
+            sceneManager.startLevel(levelNum); // Seviyeyi başlatır [cite: 169]
+        });
+
+        return card;
     }
 }
