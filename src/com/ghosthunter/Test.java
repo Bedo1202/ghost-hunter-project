@@ -1,40 +1,23 @@
 package com.ghosthunter;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * Department of Computer Science & Engineering - CSE 1242 Term Project [cite: 8, 9, 10]
+ * Submission Date: 17.05.2026 [cite: 11]
+ * Entry class for feature-ui.
+ */
 public class Test extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
-        // Butonlar
-        Button startButton = new Button("Start Game");
-        Button levelButton = new Button("Select Level");
-        Button exitButton = new Button("Exit");
-
-        // Basit aksiyonlar
-        startButton.setOnAction(e -> System.out.println("Start Game clicked"));
-        levelButton.setOnAction(e -> System.out.println("Select Level clicked"));
-        exitButton.setOnAction(e -> primaryStage.close());
-
-        // Layout
-        VBox root = new VBox(20);
-        root.getChildren().addAll(startButton, levelButton, exitButton);
-        root.setStyle("-fx-alignment: center; -fx-background-color: black;");
-
-        // Scene
-        Scene scene = new Scene(root, 800, 600);
-
-        primaryStage.setTitle("Ghost Hunter");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        SceneManager sceneManager = new SceneManager(primaryStage);
+        sceneManager.showMainMenu();
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 }
+
