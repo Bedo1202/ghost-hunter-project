@@ -20,4 +20,3 @@ public class Test extends Application {
         launch(args);
     }
 }
-

@@ -3,6 +3,8 @@ package com.ghosthunter;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.Group;
+import javafx.scene.shape.Polygon;
 
 public class Hunter {
     private double x;
@@ -23,16 +25,30 @@ public class Hunter {
     private int eyeModeTimer;
     private final Circle view;
 	private int damageColorTimer;
-
+	private final Group viewGroup;
+	private final Polygon vacuumCone;
+	private double mouseX;
+	private double mouseY;
     public Hunter(double x, double y) {
         this.x = x;
         this.y = y;
 
         
-    view = new Circle(x, y, 20);
-    view.setFill(Color.ORANGE);
-    }
+        view = new Circle(x, y, 20);
+        view.setFill(Color.ORANGE);
 
+        vacuumCone = new Polygon();
+        vacuumCone.setFill(Color.rgb(120, 0, 180, 0.30));
+        vacuumCone.setStroke(Color.PURPLE);
+        vacuumCone.setStrokeWidth(2);
+        vacuumCone.setVisible(false);
+
+        viewGroup = new Group(vacuumCone, view);
+        direction = "RIGHT";
+
+        updateVacuumCone();
+    }
+    
     // game loop içinde sürekli çağrılacak main update metodu
     public void update() {
         updateMovement();
@@ -40,7 +56,7 @@ public class Hunter {
         updateEyeMode();
         updateDamageColor();
         updateViewPosition();
-        
+        updateVacuumCone();
     }
 
     private void updateMovement() {
@@ -64,7 +80,52 @@ public class Hunter {
     	    direction = "RIGHT";
     	}
     }
+    private void updateVacuumCone() {
+    	double length = scanRange;
+    	double width = scanRange * 0.45;
 
+        vacuumCone.getPoints().clear();
+
+        if (!scanning || vacuumEnergy <= 0) {
+            vacuumCone.setVisible(false);
+            return;
+        }
+
+        vacuumCone.setVisible(true);
+
+        double dx = mouseX - x;
+        double dy = mouseY - y;
+
+        double distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance == 0) {
+            return;
+        }
+
+        double unitX = dx / distance;
+        double unitY = dy / distance;
+
+        double perpX = -unitY;
+        double perpY = unitX;
+
+        double startX = x + unitX * 20;
+        double startY = y + unitY * 20;
+
+        double tipX = x + unitX * length;
+        double tipY = y + unitY * length;
+
+        double leftX = tipX + perpX * width / 2;
+        double leftY = tipY + perpY * width / 2;
+
+        double rightX = tipX - perpX * width / 2;
+        double rightY = tipY - perpY * width / 2;
+
+        vacuumCone.getPoints().addAll(
+                startX, startY,
+                leftX, leftY,
+                rightX, rightY
+        );
+    }
     private void updateVacuumEnergy() {
         if (scanning && vacuumEnergy > 0) {
             vacuumEnergy--;
@@ -157,7 +218,7 @@ public class Hunter {
     }
 
     public Node getView() {
-        return view;
+        return viewGroup;
     }
 
     public double getX() {
@@ -197,6 +258,13 @@ public class Hunter {
     public int getScanRange() {
         return scanRange;
     }
+    public double getMouseX() {
+        return mouseX;
+    }
+
+    public double getMouseY() {
+        return mouseY;
+    }
 
     public boolean isScanning() {
         return scanning;
@@ -205,7 +273,10 @@ public class Hunter {
     public boolean isEyeModeActive() {
         return eyeModeActive;
     }
-
+    public void setMousePosition(double mouseX, double mouseY) {
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+    }
     public void setScanning(boolean scanning) {
         if (vacuumEnergy > 0) {
             this.scanning = scanning;

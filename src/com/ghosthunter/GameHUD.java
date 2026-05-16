@@ -9,7 +9,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 /**
  * Grup Projesi - GameHUD Sınıfı
  * Amaç: PDF Sayfa 3'teki oyun içi HUD yerleşimi (Sol Vakum, Sağ Can, Üst Skor/Süre)[cite: 28, 29].
@@ -19,9 +20,11 @@ public class GameHUD {
     private final BorderPane hudContainer;
     private Label scoreLabel;
     private Label timerLabel;
-    private ProgressBar healthBar;
-    private ProgressBar vacuumBar;
+    private Rectangle healthFill;
+    private Rectangle vacuumFill;
 
+    private final double barWidth = 34;
+    private final double barHeight = 220;
     public GameHUD() {
         hudContainer = new BorderPane();
         hudContainer.setPadding(new Insets(20));
@@ -58,14 +61,24 @@ public class GameHUD {
         vacuumTitle.setFont(Font.font("Impact", FontWeight.NORMAL, 16));
         vacuumTitle.setTextFill(Color.WHITE);
 
-        vacuumBar = new ProgressBar(1.0);
-        vacuumBar.setPrefSize(35, 220);
-        // PDF İsteri: Kalın siyah kenarlık (border) ve canlı mor (purple) dolgu rengi
-        vacuumBar.setStyle("-fx-accent: #800080; -fx-control-inner-background: #000000; -fx-box-border: black; -fx-stroke-width: 4px;");
-        vacuumBar.setRotate(-90); // Dikey görünüm transformasyonu
+        Rectangle vacuumBackground = new Rectangle(barWidth, barHeight);
+        vacuumBackground.setFill(Color.BLACK);
+        vacuumBackground.setStroke(Color.WHITE);
+        vacuumBackground.setStrokeWidth(3);
+        vacuumBackground.setArcWidth(12);
+        vacuumBackground.setArcHeight(12);
 
-        VBox barWrapper = new VBox(vacuumBar);
-        barWrapper.setPadding(new Insets(90, 0, 0, 0));
+        vacuumFill = new Rectangle(barWidth - 8, barHeight - 8);
+        vacuumFill.setFill(Color.PURPLE);
+        vacuumFill.setArcWidth(8);
+        vacuumFill.setArcHeight(8);
+
+        StackPane vacuumStack = new StackPane(vacuumBackground, vacuumFill);
+        vacuumStack.setAlignment(Pos.BOTTOM_CENTER);
+        vacuumStack.setPadding(new Insets(4));
+
+        VBox barWrapper = new VBox(vacuumStack);
+        barWrapper.setPadding(new Insets(10, 0, 0, 0));
 
         leftBox.getChildren().addAll(vacuumTitle, barWrapper);
         hudContainer.setLeft(leftBox);
@@ -79,14 +92,24 @@ public class GameHUD {
         healthTitle.setFont(Font.font("Impact", FontWeight.NORMAL, 16));
         healthTitle.setTextFill(Color.WHITE);
 
-        healthBar = new ProgressBar(1.0);
-        healthBar.setPrefSize(35, 220);
-        // PDF İsteri: Kalın siyah kenarlık (border) ve canlı kırmızı (red) dolgu rengi
-        healthBar.setStyle("-fx-accent: #FF0000; -fx-control-inner-background: #000000; -fx-box-border: black; -fx-stroke-width: 4px;");
-        healthBar.setRotate(-90);
+        Rectangle healthBackground = new Rectangle(barWidth, barHeight);
+        healthBackground.setFill(Color.BLACK);
+        healthBackground.setStroke(Color.WHITE);
+        healthBackground.setStrokeWidth(3);
+        healthBackground.setArcWidth(12);
+        healthBackground.setArcHeight(12);
 
-        VBox barWrapper = new VBox(healthBar);
-        barWrapper.setPadding(new Insets(90, 0, 0, 0));
+        healthFill = new Rectangle(barWidth - 8, barHeight - 8);
+        healthFill.setFill(Color.RED);
+        healthFill.setArcWidth(8);
+        healthFill.setArcHeight(8);
+
+        StackPane healthStack = new StackPane(healthBackground, healthFill);
+        healthStack.setAlignment(Pos.BOTTOM_CENTER);
+        healthStack.setPadding(new Insets(4));
+
+        VBox barWrapper = new VBox(healthStack);
+        barWrapper.setPadding(new Insets(10, 0, 0, 0));
 
         rightBox.getChildren().addAll(healthTitle, barWrapper);
         hudContainer.setRight(rightBox);
@@ -97,7 +120,11 @@ public class GameHUD {
     public void syncValues(int score, String timeStr, double hp, double vac) {
         scoreLabel.setText("SCORE: " + score);
         timerLabel.setText(timeStr);
-        healthBar.setProgress(hp);
-        vacuumBar.setProgress(vac);
+
+        hp = Math.max(0, Math.min(1, hp));
+        vac = Math.max(0, Math.min(1, vac));
+
+        healthFill.setHeight((barHeight - 8) * hp);
+        vacuumFill.setHeight((barHeight - 8) * vac);
     }
 }

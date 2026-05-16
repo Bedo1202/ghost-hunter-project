@@ -51,6 +51,9 @@ public class ConfigReader {
 
             // Seviye 2 parametrelerini dosyadan okuyup GameConfig sınıfındaki değişkenlere eşitler.
             case "level_2_playable_area_x": config.level2.areaX = value; break;
+            case "level_2_playable_area_y": config.level2.areaY = value; break;
+            case "level_2_playable_area_height": config.level2.height = value; break;
+            case "level_2_wisps": config.level2.wispCount = value; break;
             case "level_2_playable_area_width": config.level2.width = value; break;
             case "level_2_time": config.level2.timeLimit = value; break;
             case "level_2_ghosts": config.level2.ghostCount = value; break;
@@ -58,7 +61,12 @@ public class ConfigReader {
 
             // Seviye 3 parametrelerini dosyadan okuyup GameConfig sınıfındaki değişkenlere eşitler.
             case "level_3_playable_area_x": config.level3.areaX = value; break;
+            case "level_3_playable_area_y": config.level3.areaY = value; break;
+            case "level_3_playable_area_width": config.level3.width = value; break;
+            case "level_3_playable_area_height": config.level3.height = value; break;
             case "level_3_time": config.level3.timeLimit = value; break;
+            case "level_3_ghosts": config.level3.ghostCount = value; break;
+            case "level_3_rippers": config.level3.ripperCount = value; break;
             case "level_3_wisps": config.level3.wispCount = value; break;
 
             //Token parametrelerini dosyadan okuyup GameConfig sınıfındaki değişkenlere eşitler.

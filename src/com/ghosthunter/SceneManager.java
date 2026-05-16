@@ -4,7 +4,10 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
+import javafx.geometry.Point2D;
+import javafx.scene.image.ImageView;
 /**
  * Grup Projesi - SceneManager Sınıfı (Mevcut dosyanın içerisine)
  * Amaç: Harita görsel temalarını yüklemek ve panelleri (Win/Lose) yönetmek[cite: 23, 179].
@@ -14,9 +17,9 @@ public class SceneManager {
     private final Stage primaryStage;
     private final int windowWidth = 1024;
     private final int windowHeight = 768;
+    
 
-    // TODO: Engine dalı bitince burası bağlanacak
-    // private GameController gameController;
+    private GameController gameController;
 
     public SceneManager(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -35,8 +38,18 @@ public class SceneManager {
     }
 
     public void startLevel(int levelNumber) {
-        StackPane gameRootContainer = new StackPane();
-        Pane mapPlayAreaPane = new Pane();
+    	StackPane outerRoot = new StackPane();
+    	outerRoot.setStyle("-fx-background-color: black;");
+
+    	StackPane gameRootContainer = new StackPane();
+    	gameRootContainer.setPrefSize(windowWidth, windowHeight);
+    	gameRootContainer.setMinSize(windowWidth, windowHeight);
+    	gameRootContainer.setMaxSize(windowWidth, windowHeight);
+
+    	Pane mapPlayAreaPane = new Pane();
+    	mapPlayAreaPane.setPrefSize(windowWidth, windowHeight);
+    	mapPlayAreaPane.setMinSize(windowWidth, windowHeight);
+    	mapPlayAreaPane.setMaxSize(windowWidth, windowHeight);
 
         // PDF Sayfa 5, 6: Seviyelerin Kendine Has Harita Görsellerinin Atanması
         try {
@@ -45,9 +58,12 @@ public class SceneManager {
 
         	// 2. Resmin yüklenirken boyutlarının pencereye tam oturmasını sağladık
         	Image mapImage = new Image(getClass().getResourceAsStream(imageFileName), windowWidth, windowHeight, false, true);
-            mapPlayAreaPane.setBackground(new Background(new BackgroundImage(mapImage,
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, new BackgroundSize(windowWidth, windowHeight, false, false, false, false))));
+        	ImageView mapView = new ImageView(mapImage);
+        	mapView.setFitWidth(windowWidth);
+        	mapView.setFitHeight(windowHeight);
+        	mapView.setPreserveRatio(false);
+
+        	mapPlayAreaPane.getChildren().add(mapView);
         } catch (Exception e) {
             // PDF Tematik Alternatif Renkleri (Görseller yüklenemezse devreye girer)
             if (levelNumber == 1) mapPlayAreaPane.setStyle("-fx-background-color: #2E1A47;"); // Level 1: Deep Purple 
@@ -58,25 +74,37 @@ public class SceneManager {
         // HUD Katmanının Eklenmesi
         GameHUD gameHUD = new GameHUD();
         gameRootContainer.getChildren().addAll(mapPlayAreaPane, gameHUD.getContainer());
+        outerRoot.getChildren().add(gameRootContainer);
 
-        Scene gameScene = new Scene(gameRootContainer, windowWidth, windowHeight);
+        Scene gameScene = new Scene(outerRoot, windowWidth, windowHeight);
         primaryStage.setScene(gameScene);
 
+        DoubleBinding scaleBinding = (DoubleBinding) Bindings.min(
+                gameScene.widthProperty().divide(windowWidth),
+                gameScene.heightProperty().divide(windowHeight)
+        );
+
+        gameRootContainer.scaleXProperty().bind(scaleBinding);
+        gameRootContainer.scaleYProperty().bind(scaleBinding);
+
         // KLAVYE KONTROLLERİ (W,A,S,D ve SPACE)
+        gameController = new GameController(this, mapPlayAreaPane, gameHUD, gameRootContainer);
+        gameController.startLevel(levelNumber);
+        
         gameScene.setOnKeyPressed(e -> {
-            // TODO: gameController.handleInput(e.getCode(), true);
+            gameController.handleInput(e.getCode(), true);
         });
         gameScene.setOnKeyReleased(e -> {
-            // TODO: gameController.handleInput(e.getCode(), false);
+            gameController.handleInput(e.getCode(), false);
+        });
+        gameScene.setOnMouseMoved(e -> {
+            Point2D localPoint = mapPlayAreaPane.sceneToLocal(e.getSceneX(), e.getSceneY());
+            gameController.handleMouseMoved(localPoint.getX(), localPoint.getY());
         });
 
-        // SIMÜLASYON TETİKLEME ALANI (Motorsuz test aşaması için)
-        gameScene.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                triggerWinOverlay(gameRootContainer, levelNumber);
-            } else if (event.isAltDown()) {
-                triggerLoseOverlay(gameRootContainer, levelNumber, 240);
-            }
+        gameScene.setOnMouseDragged(e -> {
+            Point2D localPoint = mapPlayAreaPane.sceneToLocal(e.getSceneX(), e.getSceneY());
+            gameController.handleMouseMoved(localPoint.getX(), localPoint.getY());
         });
     }
 

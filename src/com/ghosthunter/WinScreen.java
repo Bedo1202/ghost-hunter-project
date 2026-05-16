@@ -25,17 +25,20 @@ public class WinScreen extends VBox {
         this.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.75), null, null)));
 
         // 3. "YOU WIN!" BAŞLIĞI
-        Label mainLabel = new Label("YOU WIN!");
+        Label mainLabel = new Label(currentLevel >= 3 ? "GAME COMPLETED!" : "YOU WIN!");
         mainLabel.setFont(Font.font("Impact", FontWeight.BOLD, 44)); // Görseldeki kalın font stili
         mainLabel.setTextFill(Color.WHITE);
 
         // 4. ALTTARAFINDAKİ BİLGİLENDİRME METNİ
-        Label subLabel = new Label("YOU'VE VACUUMED ALL THE GHOSTS!");
+        Label subLabel = new Label(currentLevel >= 3
+                ? "YOU HAVE VACUUMED ALL LEVELS!"
+                : "YOU'VE VACUUMED ALL THE GHOSTS!");
         subLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         subLabel.setTextFill(Color.WHITE);
 
         // 5. "NEXT LEVEL" BUTONU VE TIKLAMA RENK DEĞİŞİMİ
-        Button nextLevelBtn = new Button("NEXT LEVEL");
+        boolean isFinalLevel = currentLevel >= 3;
+        Button nextLevelBtn = new Button(isFinalLevel ? "MAIN MENU" : "NEXT LEVEL");
         nextLevelBtn.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         nextLevelBtn.setPrefSize(160, 40); // Dikdörtgen buton boyutları
 
@@ -59,7 +62,11 @@ public class WinScreen extends VBox {
             nextLevelBtn.setTextFill(Color.WHITE);
             
             // SceneManager'a bir sonraki seviyeyi başlatma emri verir
-            sceneManager.startLevel(currentLevel + 1);
+            if (isFinalLevel) {
+                sceneManager.showMainMenu();
+            } else {
+                sceneManager.startLevel(currentLevel + 1);
+            }
         });
 
         // Tüm elemanları panele ekliyoruz

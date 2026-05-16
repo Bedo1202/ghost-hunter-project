@@ -32,5 +32,42 @@ public static void main(String[] args) {
  // Scanner açıkken ve entity scan range içindeyken vacuum etkisi uygulanabilir.
  // GameController hazır olunca bu method update loop içinde kullanılacak.
     public static boolean canVacuumEntity(Hunter hunter, Entity entity) {
-    	return hunter.isScanning() && !entity.isCaptured() && isEntityInsideScanRange(hunter, entity); }
+    	return hunter.isScanning() && !entity.isCaptured() && isEntityInsideVacuumCone(hunter, entity); }
+    public static boolean isEntityInsideVacuumCone(Hunter hunter, Entity entity) {
+        double hx = hunter.getX();
+        double hy = hunter.getY();
+
+        double mx = hunter.getMouseX();
+        double my = hunter.getMouseY();
+
+        double ex = entity.getX();
+        double ey = entity.getY();
+
+        double dx = mx - hx;
+        double dy = my - hy;
+
+        double distanceToMouse = Math.sqrt(dx * dx + dy * dy);
+
+        if (distanceToMouse == 0) {
+            return false;
+        }
+
+        double dirX = dx / distanceToMouse;
+        double dirY = dy / distanceToMouse;
+
+        double entityX = ex - hx;
+        double entityY = ey - hy;
+
+        double forwardDistance = entityX * dirX + entityY * dirY;
+
+        if (forwardDistance < 0 || forwardDistance > hunter.getScanRange()) {
+            return false;
+        }
+
+        double perpendicularDistance = Math.abs(entityX * (-dirY) + entityY * dirX);
+
+        double coneHalfWidth = 40;
+
+        return perpendicularDistance <= coneHalfWidth + entity.getCollisionRadius();
+    }
 } 

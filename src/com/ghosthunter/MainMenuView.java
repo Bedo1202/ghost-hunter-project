@@ -8,7 +8,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
+import javafx.scene.image.ImageView;
 public class MainMenuView extends VBox {
 
     private final SceneManager sceneManager;
@@ -30,7 +30,7 @@ public class MainMenuView extends VBox {
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
-                new BackgroundSize(1024, 768, false, false, false, false)
+                new BackgroundSize(100, 100, true, true, false, true)
             );
             this.setBackground(new Background(backgroundImage));
         } catch (Exception e) {
