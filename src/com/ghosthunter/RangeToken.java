@@ -3,15 +3,39 @@ package com.ghosthunter;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.Group;
+import javafx.scene.shape.Polygon;
+import javafx.scene.effect.DropShadow;
 
 public class RangeToken extends Token {
-    private final Circle view;
+    private final Group view;
     private final int rangeIncrease;
     public RangeToken(double x, double y, int rangeIncrease) {
         super(x, y);
         this.rangeIncrease = rangeIncrease;
-        view = new Circle(x, y, 13);
-        view.setFill(Color.GOLD);
+        view = new Group();
+
+        Circle base = new Circle(0, 0, 13);
+        base.setFill(Color.YELLOW);
+        base.setStroke(Color.BLACK);
+        base.setStrokeWidth(2.5);
+
+        Polygon arrow = new Polygon();
+
+        arrow.getPoints().addAll(
+                8.0, 0.0,
+                -5.0, -7.0,
+                -5.0, 7.0
+        );
+
+        arrow.setFill(Color.BLACK);
+
+        view.getChildren().addAll(base, arrow);
+
+        view.setEffect(new DropShadow(4, Color.BLACK));
+
+        view.setLayoutX(x);
+        view.setLayoutY(y);
     }
     public int getRangeIncrease() {
         return rangeIncrease;
@@ -22,6 +46,6 @@ public class RangeToken extends Token {
     }
     @Override
     public double getCollisionRadius() {
-        return view.getRadius();
+        return 13;
     }
 }

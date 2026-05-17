@@ -35,6 +35,8 @@ public class GameController {
     private Level activeLevel;
     private int damageCooldownFrames = 0;
     private boolean gameEnded = false;
+    private boolean paused = false;
+    private int tokenSpawnCounter = 0;
     
     public GameController() {
         // Sınıfın yapılandırıcısıdır, oyun ilk açıldığında bu kod devreye girer.
@@ -106,20 +108,7 @@ public class GameController {
 
         tokens = new ArrayList<>();
 
-        for (int i = 0; i < 3; i++) {
-            Token token = TokenFactory.createRandomToken(
-                    minX,
-                    minY,
-                    maxX,
-                    maxY,
-                    config.healthTokenIncrease,
-                    config.vacuumTokenIncrease,
-                    config.eyeTokenDuration * 60
-            );
-
-            tokens.add(token);
-            playAreaPane.getChildren().add(token.getView());
-        }
+        
     }
     //gameloop başlatır.
     private void startGameLoop() {
@@ -135,6 +124,9 @@ public class GameController {
         animationTimer.start();
     }
     private void updateGame() {
+    	if (paused) {
+    	    return;
+    	}
         hunter.update();
 
         double minX = activeLevel.areaX;
@@ -150,6 +142,7 @@ public class GameController {
 
         updateEntities(minX, minY, maxX, maxY);
         updateTokens();
+        spawnTokensOverTime(minX, minY, maxX, maxY);
         updateHUD();
         checkGameEnd();
     }
@@ -239,6 +232,10 @@ public class GameController {
         this.score += points;
     }
     public void handleInput(KeyCode code, boolean pressed) {
+    	if (code == KeyCode.ESCAPE && pressed) {
+    	    togglePause();
+    	    return;
+    	}
         if (hunter == null) {
             return;
         }
@@ -308,4 +305,66 @@ public class GameController {
         stopGame("Game over!");
         sceneManager.triggerLoseOverlay(gameRoot, currentLevel, score);
     }
+    public void togglePause() {
+        if (paused) {
+            return;
+        }
+
+        paused = true;
+
+        if (secondTimer != null) {
+            secondTimer.pause();
+        }
+
+        PauseView overlay = new PauseView(sceneManager, this, currentLevel);
+        gameRoot.getChildren().add(overlay);
+    }
+
+    public void resumeGame() {
+        paused = false;
+
+        if (secondTimer != null) {
+            secondTimer.play();
+        }
+    }	
+    private void spawnTokensOverTime(double minX,
+            double minY,
+            double maxX,
+            double maxY) {
+
+tokenSpawnCounter++;
+
+// yaklaşık her 9 saniyede bir dene
+if (tokenSpawnCounter < 540) {
+return;
+}
+
+tokenSpawnCounter = 0;
+
+// aktif token sayısı limiti
+int activeCount = 0;	
+for (Token token : tokens) {
+if (token.isActive()) {
+activeCount++;
+}
+}
+
+if (activeCount >= 2) {
+return;
+}
+
+Token token = TokenFactory.createRandomToken(
+minX,
+minY,
+maxX,
+maxY,
+config.healthTokenIncrease,
+config.vacuumTokenIncrease,
+config.eyeTokenDuration * 60
+);
+
+tokens.add(token);
+
+playAreaPane.getChildren().add(token.getView());
+}
 }

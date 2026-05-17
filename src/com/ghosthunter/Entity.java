@@ -35,17 +35,31 @@ public abstract class Entity {
     }
  // playable area sınırlarından sekme mantığı
  // bedirhan playable area değerlerini hazır edince bu methodu çağıracak
- public void checkBounds(double minX, double minY, double maxX, double maxY) {
-     double radius = getCollisionRadius();
+    public void checkBounds(double minX, double minY, double maxX, double maxY) {
+        double radius = getCollisionRadius();
 
-     if (x - radius <= minX || x + radius >= maxX) {
-         speedX *= -1;
-     }
+        if (x - radius <= minX) {
+            x = minX + radius;
+            speedX *= -1;
+        }
 
-     if (y - radius <= minY || y + radius >= maxY) {
-         speedY *= -1;
-     }
- }
+        if (x + radius >= maxX) {
+            x = maxX - radius;
+            speedX *= -1;
+        }
+
+        if (y - radius <= minY) {
+            y = minY + radius;
+            speedY *= -1;
+        }
+
+        if (y + radius >= maxY) {
+            y = maxY - radius;
+            speedY *= -1;
+        }
+
+        updateViewPosition();
+    }
 //entity scanner alanında kaldıkça küçülür
 //yeterince küçülürse captured true olur.
  public void shrink() {

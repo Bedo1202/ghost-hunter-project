@@ -3,25 +3,55 @@ package com.ghosthunter;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.Group;
+import javafx.scene.shape.Polygon;
+import javafx.scene.effect.Glow;
 
 public class Ripper extends Entity {
 
-    private final Circle view;
+    private final Group view;
 
     public Ripper(double x, double y) {
-    super(x, y, 2.0, 1.7, 20);
+    super(x, y, 1.3, 1.1, 20);
 
     // temsili görünüm
-    view = new Circle(x, y, 18);
-    view.setFill(Color.PURPLE);
-    view.setOpacity(0.8);
+    view = new Group();
+    Group spikesGroup = new Group();
+
+    int numSpikes = 12;
+
+    for (int i = 0; i < numSpikes; i++) {
+        double angle = i * (360.0 / numSpikes);
+
+        Polygon spike = new Polygon();
+        spike.getPoints().addAll(
+                0.0, -22.0,
+                -5.0, -12.0,
+                5.0, -12.0
+        );
+
+        spike.setFill(Color.PURPLE);
+        spike.setRotate(angle);
+
+        spikesGroup.getChildren().add(spike);
+    }
+
+    Circle core = new Circle(0, 0, 13, Color.BLACK);
+    Circle leftEye = new Circle(-4, -2, 2.5, Color.RED);
+    Circle rightEye = new Circle(4, -2, 2.5, Color.RED);
+
+    view.getChildren().addAll(spikesGroup, core, leftEye, rightEye);
+    view.setEffect(new Glow(0.60));
+
+    updateViewPosition();
     view.setVisible(false);
     }
 
+    
     @Override
     protected void updateViewPosition() {
-    view.setCenterX(x);
-    view.setCenterY(y);
+        view.setLayoutX(x);
+        view.setLayoutY(y);
     }
 
     @Override
@@ -31,6 +61,6 @@ public class Ripper extends Entity {
 
     @Override
     public double getCollisionRadius() {
-    return view.getRadius();
+    return 18;
     }
 }

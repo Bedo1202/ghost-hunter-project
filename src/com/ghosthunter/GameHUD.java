@@ -41,11 +41,15 @@ public class GameHUD {
 
         // PDF Sayfa 3: Spooky/Hand-drawn yazı stili
         scoreLabel = new Label("SCORE: 0");
-        scoreLabel.setFont(Font.font("Impact", FontWeight.NORMAL, 22));
+        scoreLabel.setFont(Font.loadFont(
+                getClass().getResourceAsStream("Creepster-Regular.ttf"),
+                22));
         scoreLabel.setTextFill(Color.WHITE);
 
         timerLabel = new Label("1:20"); // MM:SS formatı dökümandan alındı
-        timerLabel.setFont(Font.font("Impact", FontWeight.NORMAL, 26));
+        timerLabel.setFont(Font.loadFont(
+                getClass().getResourceAsStream("Creepster-Regular.ttf"),
+                26));
         timerLabel.setTextFill(Color.WHITE);
 
         topBox.getChildren().addAll(scoreLabel, timerLabel);
@@ -58,7 +62,9 @@ public class GameHUD {
         leftBox.setAlignment(Pos.TOP_CENTER);
 
         Label vacuumTitle = new Label("VACUUM:");
-        vacuumTitle.setFont(Font.font("Impact", FontWeight.NORMAL, 16));
+        vacuumTitle.setFont(Font.loadFont(
+                getClass().getResourceAsStream("Creepster-Regular.ttf"),
+                16));
         vacuumTitle.setTextFill(Color.WHITE);
 
         Rectangle vacuumBackground = new Rectangle(barWidth, barHeight);
@@ -89,7 +95,9 @@ public class GameHUD {
         rightBox.setAlignment(Pos.TOP_CENTER);
 
         Label healthTitle = new Label("HEALTH:");
-        healthTitle.setFont(Font.font("Impact", FontWeight.NORMAL, 16));
+        healthTitle.setFont(Font.loadFont(
+                getClass().getResourceAsStream("Creepster-Regular.ttf"),
+                16));
         healthTitle.setTextFill(Color.WHITE);
 
         Rectangle healthBackground = new Rectangle(barWidth, barHeight);

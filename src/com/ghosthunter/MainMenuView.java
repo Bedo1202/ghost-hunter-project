@@ -56,23 +56,31 @@ public class MainMenuView extends VBox {
      */
     private Button createStyledButton(String text) {
         Button btn = new Button(text);
-        btn.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+
+        Font buttonFont = Font.loadFont(
+                getClass().getResourceAsStream("Creepster-Regular.ttf"),
+                24
+        );
+
+        if (buttonFont == null) {
+            buttonFont = Font.font("Arial", 24);
+        }
+
+        btn.setFont(buttonFont);
+
         btn.setPrefSize(180, 40);
 
-        // Varsayılan Stil: Mor arka plan, Beyaz yazı
         Background defaultBg = new Background(new BackgroundFill(Color.web("#9400D3"), null, null));
         Background clickBg = new Background(new BackgroundFill(Color.WHITE, null, null));
-        
+
         btn.setBackground(defaultBg);
         btn.setTextFill(Color.WHITE);
 
-        // Tıklama Anı (Mouse Pressed): Arka plan Beyaz, Yazı Kırmızı
         btn.setOnMousePressed(e -> {
             btn.setBackground(clickBg);
             btn.setTextFill(Color.RED);
         });
 
-        // Tıklamayı Bırakma Anı (Mouse Released): Eski haline döner
         btn.setOnMouseReleased(e -> {
             btn.setBackground(defaultBg);
             btn.setTextFill(Color.WHITE);

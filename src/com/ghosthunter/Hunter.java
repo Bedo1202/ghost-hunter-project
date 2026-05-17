@@ -9,12 +9,12 @@ import javafx.scene.shape.Polygon;
 public class Hunter {
     private double x;
     private double y;
-    private double speed = 4.0;
+    private double speed = 3.0;
     private int health = 100;
     private int maxHealth = 100;
     private int vacuumEnergy = 100;
     private int maxVacuumEnergy = 100;
-    private int scanRange = 100;
+    private int scanRange = 140;
     private boolean movingUp;
     private boolean movingDown;
     private boolean movingLeft;
@@ -82,7 +82,7 @@ public class Hunter {
     }
     private void updateVacuumCone() {
     	double length = scanRange;
-    	double width = scanRange * 0.45;
+    	double width = scanRange * 0.60;
 
         vacuumCone.getPoints().clear();
 
@@ -297,5 +297,8 @@ public class Hunter {
 
     public void setMovingRight(boolean movingRight) {
         this.movingRight = movingRight;
+    }
+    public double getConeHalfWidth() {
+        return (scanRange * 0.60) / 2;
     }
 }

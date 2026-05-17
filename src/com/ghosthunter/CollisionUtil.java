@@ -66,7 +66,7 @@ public static void main(String[] args) {
 
         double perpendicularDistance = Math.abs(entityX * (-dirY) + entityY * dirX);
 
-        double coneHalfWidth = 40;
+        double coneHalfWidth = hunter.getConeHalfWidth();
 
         return perpendicularDistance <= coneHalfWidth + entity.getCollisionRadius();
     }
