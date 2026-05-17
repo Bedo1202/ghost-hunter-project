@@ -69,7 +69,7 @@ public abstract class Entity {
   view.setScaleX(newScaleX);
   view.setScaleY(newScaleY);
 }
-    public abstract void updateViewPosition();    
+    protected abstract void updateViewPosition();    
     public void setVisible(boolean visible) {
         this.visible = visible;
         getView().setVisible(visible);
