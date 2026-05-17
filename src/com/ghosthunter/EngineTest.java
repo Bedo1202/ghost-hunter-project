@@ -9,7 +9,7 @@ public class EngineTest {
 
         // Config dosyasının okunup okunmadığını kontrol eder. 
         System.out.println("Okunan Max Can: " + controller.config.maximumHealth);
-        System.out.println("Level 2 Sure: " + controller.config.level2.timeLimit);
+        System.out.println("Level 2 Sure: " + controller.config.level2.süreSınırı);
 
         //  Seviye 2'yi baslat ve sayaci goster
         System.out.println("Level 2 baslatiliyor...");

@@ -8,60 +8,53 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-/**
- * Grup Projesi - WinScreen Sınıfı
- * Amaç: PDF Sayfa 12'deki yarı saydam "YOU WIN!" panelinin ve buton animasyonunun oluşturulması.
- */
+//Ali_Yüşa_Sezer_150124071
 public class WinScreen extends VBox {
 
     public WinScreen(SceneManager sceneManager, int currentLevel) {
-        // 1. PANEL YERLEŞİM AYARLARI
-        this.setAlignment(Pos.CENTER); // Tüm yazıları ve butonu panelin tam ortasına hizalar
-        this.setSpacing(15); // Elemanların arasındaki dikey boşluk
+        // Panel ayarları
+        this.setAlignment(Pos.CENTER); 
+        this.setSpacing(15); 
 
-        // 2. YARI SAYDAM SİYAH ARKA PLAN (PDF İsteri)
-        // Color.rgb(0, 0, 0, 0.75) -> Sondaki 0.75 değeri %75 opaklık sağlar. 
-        // Böylece arkadaki oyun haritası hafif kararmış şekilde alttan görünür.
+        //Arka plan ayarları
         this.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.75), null, null)));
 
-        // 3. "YOU WIN!" BAŞLIĞI
-        Label mainLabel = new Label(currentLevel >= 3 ? "GAME COMPLETED!" : "YOU WIN!");
-        mainLabel.setFont(Font.font("Impact", FontWeight.BOLD, 44)); // Görseldeki kalın font stili
-        mainLabel.setTextFill(Color.WHITE);
+        // Kazandın yazısı
+        Label mainL = new Label(currentLevel >= 3 ? "GAME COMPLETED!" : "YOU WIN!");
+        mainL.setFont(Font.font("Impact", FontWeight.BOLD, 45)); 
+        mainL.setTextFill(Color.WHITE);
 
-        // 4. ALTTARAFINDAKİ BİLGİLENDİRME METNİ
+        //altındaki bilgilendirme kısmı 
         Label subLabel = new Label(currentLevel >= 3
                 ? "YOU HAVE VACUUMED ALL LEVELS!"
                 : "YOU'VE VACUUMED ALL THE GHOSTS!");
-        subLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        subLabel.setFont(Font.font("Arial", FontWeight.BOLD, 15));
         subLabel.setTextFill(Color.WHITE);
 
-        // 5. "NEXT LEVEL" BUTONU VE TIKLAMA RENK DEĞİŞİMİ
+        // Sonraki seviyeye geçiş
         boolean isFinalLevel = currentLevel >= 3;
         Button nextLevelBtn = new Button(isFinalLevel ? "MAIN MENU" : "NEXT LEVEL");
-        nextLevelBtn.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        nextLevelBtn.setPrefSize(160, 40); // Dikdörtgen buton boyutları
+        nextLevelBtn.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"),14));
+        nextLevelBtn.setPrefSize(200, 50); // 
 
-        // Renk Tanımlamaları
-        Background purpBg = new Background(new BackgroundFill(Color.web("#800080"), null, null)); // Normal Mor
-        Background clickBg = new Background(new BackgroundFill(Color.WHITE, null, null)); // Tıklanınca Beyaz
+        //renkler
+        Background purpBg = new Background(new BackgroundFill(Color.PURPLE, null, null)); 
+        Background clickBg = new Background(new BackgroundFill(Color.WHITE, null, null)); 
 
-        // Butonun İlk Hali: Mor arka plan, Beyaz yazı
+        //Butonun anlık renkleri
         nextLevelBtn.setBackground(purpBg);
         nextLevelBtn.setTextFill(Color.WHITE);
 
-        // PDF Genel Kuralı: Tıklanma anında (Pressed) arka plan BEYAZ, yazı KIRMIZI olur
         nextLevelBtn.setOnMousePressed(e -> {
             nextLevelBtn.setBackground(clickBg);
             nextLevelBtn.setTextFill(Color.RED);
         });
 
-        // Tıklama bırakıldığında (Released) bir sonraki seviyeye geçişi tetikler
         nextLevelBtn.setOnMouseReleased(e -> {
             nextLevelBtn.setBackground(purpBg);
             nextLevelBtn.setTextFill(Color.WHITE);
             
-            // SceneManager'a bir sonraki seviyeyi başlatma emri verir
+            //seviyeye göre sonraki ekranı verir
             if (isFinalLevel) {
                 sceneManager.showMainMenu();
             } else {
@@ -70,6 +63,6 @@ public class WinScreen extends VBox {
         });
 
         // Tüm elemanları panele ekliyoruz
-        this.getChildren().addAll(mainLabel, subLabel, nextLevelBtn);
+        this.getChildren().addAll(mainL, subLabel, nextLevelBtn);
     }
 }

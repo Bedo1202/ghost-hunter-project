@@ -3,136 +3,146 @@ package com.ghosthunter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-/**
- * Grup Projesi - GameHUD Sınıfı
- * Amaç: PDF Sayfa 3'teki oyun içi HUD yerleşimi (Sol Vakum, Sağ Can, Üst Skor/Süre)[cite: 28, 29].
- */
+  //Ali_Yüşa_Sezer_150124071
+  //Ahmet_Kayra_Demirci_150124056
+ 
+// GameHUD'da her seviyede olan sağda can, solda vakum ve orta üstte skorlan süreyi ayarladım
 public class GameHUD {
-
+    //Pano ayarlar
     private final BorderPane hudContainer;
-    private Label scoreLabel;
-    private Label timerLabel;
-    private Rectangle healthFill;
-    private Rectangle vacuumFill;
-
-    private final double barWidth = 34;
-    private final double barHeight = 220;
+    //Anlık olarak skor ve zamanı ekrana yansıtır
+    private Label scoreL;
+    private Label timerL;
+    //Can ve vakum barlarının oyundaki duruma göre ekrana yansıtır
+    private Rectangle healthF;
+    private Rectangle vacuumF;
+    //barların boyutları
+    private final double barW = 34;
+    private final double barH = 220;
+    //HUD'u başlatır
     public GameHUD() {
+    	//Panoyu düzenler
         hudContainer = new BorderPane();
-        hudContainer.setPadding(new Insets(20, 5, 20, 5));
-        hudContainer.setPickOnBounds(false); // Fare tıklamalarını engellemez
+        hudContainer.setPadding(new Insets(20));
+        hudContainer.setPickOnBounds(false);
 
-        initTopCenterHUD();
-        initLeftVacuumHUD();
-        initRightHealthHUD();
+        initTCHUD();
+        initLVHUD();
+        initRHHUD();
     }
 
-    private void initTopCenterHUD() {
-        VBox topBox = new VBox(2);
-        topBox.setAlignment(Pos.CENTER);
+    //Skor ve süreyi ekranda ortaya ekliyor
+    private void initTCHUD() {
+    	//Orta panel ayarları
+        VBox topB = new VBox(2);
+        topB.setAlignment(Pos.CENTER);
 
-        // PDF Sayfa 3: Spooky/Hand-drawn yazı stili
-        scoreLabel = new Label("SCORE: 0");
-        scoreLabel.setFont(Font.loadFont(
-                getClass().getResourceAsStream("Creepster-Regular.ttf"),
-                22));
-        scoreLabel.setTextFill(Color.WHITE);
-
-        timerLabel = new Label("1:20"); // MM:SS formatı dökümandan alındı
-        timerLabel.setFont(Font.loadFont(
-                getClass().getResourceAsStream("Creepster-Regular.ttf"),
-                26));
-        timerLabel.setTextFill(Color.WHITE);
-
-        topBox.getChildren().addAll(scoreLabel, timerLabel);
-        hudContainer.setTop(topBox);
-        BorderPane.setAlignment(topBox, Pos.CENTER);
+        //Skor yazısını ayarlar
+        scoreL = new Label("SCORE: 0");
+        scoreL.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"),22));
+        scoreL.setTextFill(Color.WHITE);
+        //Süre yazısını ayarlar
+        timerL = new Label(""); 
+        timerL.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"),26));
+        timerL.setTextFill(Color.WHITE);
+        //Skor ve süreyi ekrana ayarlar
+        topB.getChildren().addAll(scoreL, timerL);
+        hudContainer.setTop(topB);
+        BorderPane.setAlignment(topB, Pos.CENTER);
     }
 
-    private void initLeftVacuumHUD() {
-        VBox leftBox = new VBox(5);
-        leftBox.setAlignment(Pos.TOP_CENTER);
-
+    //Vakum barını ekranın soluna ayarlar
+    private void initLVHUD() {
+        //Sol panel ayarları
+    	VBox leftB = new VBox(5);
+        leftB.setAlignment(Pos.TOP_CENTER);
+        
+        //Vakum yazısını ayarlar
         Label vacuumTitle = new Label("VACUUM:");
-        vacuumTitle.setFont(Font.loadFont(
-                getClass().getResourceAsStream("Creepster-Regular.ttf"),
-                16));
+        vacuumTitle.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"),16));
         vacuumTitle.setTextFill(Color.WHITE);
 
-        Rectangle vacuumBackground = new Rectangle(barWidth, barHeight -7);
-        vacuumBackground.setFill(Color.BLACK);
-        vacuumBackground.setStroke(Color.WHITE);
-        vacuumBackground.setStrokeWidth(3);
-        vacuumBackground.setArcWidth(12);
-        vacuumBackground.setArcHeight(12);
+        //Vakum barının dışındaki çerçeve ve ve çerçeve içini oluşturur
+        Rectangle vacuumBg = new Rectangle(barW, barH -7);
+        vacuumBg.setFill(Color.BLACK);
+        vacuumBg.setStroke(Color.WHITE);
+        vacuumBg.setStrokeWidth(3);
+        vacuumBg.setArcWidth(12);
+        vacuumBg.setArcHeight(12);
 
-        vacuumFill = new Rectangle(barWidth -4, barHeight -4);
-        vacuumFill.setFill(Color.PURPLE);
-        vacuumFill.setArcWidth(8);
-        vacuumFill.setArcHeight(8);
+        //Barı oluşturur
+        vacuumF = new Rectangle(barW -4, barH -4);
+        vacuumF.setFill(Color.PURPLE);
+        vacuumF.setArcWidth(8);
+        vacuumF.setArcHeight(8);
 
-        StackPane vacuumStack = new StackPane(vacuumBackground, vacuumFill);
+        //Bar ve çerçeveyi birleştirir
+        StackPane vacuumStack = new StackPane(vacuumBg, vacuumF);
         vacuumStack.setAlignment(Pos.BOTTOM_CENTER);
         vacuumStack.setPadding(new Insets(4));
-
+        
         VBox barWrapper = new VBox(vacuumStack);
         barWrapper.setPadding(new Insets(10, 0, 0, 0));
-
-        leftBox.getChildren().addAll(vacuumTitle, barWrapper);
-        hudContainer.setLeft(leftBox);
+        //Bar ve ismini ayarlar
+        leftB.getChildren().addAll(vacuumTitle, barWrapper);
+        hudContainer.setLeft(leftB);
     }
 
-    private void initRightHealthHUD() {
-        VBox rightBox = new VBox(5);
-        rightBox.setAlignment(Pos.TOP_CENTER);
+    //Can barını sağa ayarlar
+    private void initRHHUD() {
+    	//sağ panel ayarları
+        VBox rightB = new VBox(5);//
+        rightB.setAlignment(Pos.TOP_CENTER);
 
+        //Health yazısını ayarlar
         Label healthTitle = new Label("HEALTH:");
-        healthTitle.setFont(Font.loadFont(
-                getClass().getResourceAsStream("Creepster-Regular.ttf"),
-                16));
+        healthTitle.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"),16));
         healthTitle.setTextFill(Color.WHITE);
 
-        Rectangle healthBackground = new Rectangle(barWidth, barHeight -7);
-        healthBackground.setFill(Color.BLACK);
-        healthBackground.setStroke(Color.WHITE);
-        healthBackground.setStrokeWidth(3);
-        healthBackground.setArcWidth(12);
-        healthBackground.setArcHeight(12);
+        //Can barının dışındaki çerçeve ve çerçeve içini oluşturur
+        Rectangle healthBg = new Rectangle(barW, barH -7);
+        healthBg.setFill(Color.BLACK);
+        healthBg.setStroke(Color.WHITE);
+        healthBg.setStrokeWidth(3);
+        healthBg.setArcWidth(12);
+        healthBg.setArcHeight(12);
 
-        healthFill = new Rectangle(barWidth -4, barHeight -4);
-        healthFill.setFill(Color.RED);
-        healthFill.setArcWidth(8);
-        healthFill.setArcHeight(8);
-
-        StackPane healthStack = new StackPane(healthBackground, healthFill);
+        //Barı oluşturur
+        healthF = new Rectangle(barW -4, barH -4);
+        healthF.setFill(Color.RED);
+        healthF.setArcWidth(8);
+        healthF.setArcHeight(8);
+        //Bar ve çerçeveyi birleştirir
+        StackPane healthStack = new StackPane(healthBg, healthF);
         healthStack.setAlignment(Pos.BOTTOM_CENTER);
         healthStack.setPadding(new Insets(4));
 
         VBox barWrapper = new VBox(healthStack);
         barWrapper.setPadding(new Insets(10, 0, 0, 0));
-
-        rightBox.getChildren().addAll(healthTitle, barWrapper);
-        hudContainer.setRight(rightBox);
+        
+        rightB.getChildren().addAll(healthTitle, barWrapper);
+        hudContainer.setRight(rightB);
+    }
+    //İletişimi sağlar
+    public BorderPane getContainer() { 
+    	return hudContainer; 
     }
 
-    public BorderPane getContainer() { return hudContainer; }
-
     public void syncValues(int score, String timeStr, double hp, double vac) {
-        scoreLabel.setText("SCORE: " + score);
-        timerLabel.setText(timeStr);
-
+    	//Anlık skoru ayarlar
+        scoreL.setText("SCORE: " + score);
+        timerL.setText(timeStr);
+        //Barları 0 1 arasında tutar
         hp = Math.max(0, Math.min(1, hp));
         vac = Math.max(0, Math.min(1, vac));
-
-        healthFill.setHeight((barHeight - 8) * hp);
-        vacuumFill.setHeight((barHeight - 8) * vac);
+        //Barları anlık olarak ayarlar
+        healthF.setHeight((barH - 8) * hp);
+        vacuumF.setHeight((barH - 8) * vac);
     }
 }

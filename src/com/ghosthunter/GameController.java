@@ -30,8 +30,8 @@ public class GameController {
     private Hunter hunter;
     private List<Entity> entities;
     private List<Token> tokens;
-    private AnimationTimer animationTimer;
-    private Timeline secondTimer;
+    private AnimationTimer animationTimer;//60fps
+    private Timeline secondTimer;//saniye sayacı
     private Level activeLevel;
     private int damageCooldownFrames = 0;
     private boolean gameEnded = false;
@@ -72,7 +72,7 @@ public class GameController {
             activeLevel = config.level3;
         }
 
-        remainingTime = activeLevel.timeLimit;
+        remainingTime = activeLevel.süreSınırı;
 
         setupObjects();
         updateHUD();
@@ -80,7 +80,7 @@ public class GameController {
         startGameLoop();
     }
 
-    // Oyunu genel olarak setuplayan metod.
+    // Oyunu genel olarak ayarlayan metod.Level sınıfında gelen oynanabilir alan sınırları belirlenir, hunter merkeze yerleştirilir, ve entityler yaratılır.
     private void setupObjects() {
     	playAreaPane.getChildren().removeIf(node -> !(node instanceof ImageView));
 
@@ -93,7 +93,7 @@ public class GameController {
         playAreaPane.getChildren().add(hunter.getView());
 
         entities = EntityFactory.createEntities(
-                activeLevel.ghostCount,
+                activeLevel.hayaletSayısı,
                 activeLevel.ripperCount,
                 activeLevel.wispCount,
                 minX,
@@ -123,6 +123,8 @@ public class GameController {
 
         animationTimer.start();
     }
+    
+    //bu metotta oyun güncel tutulur ve her framede oyun ilerletirilir.
     private void updateGame() {
     	if (paused) {
     	    return;
@@ -146,6 +148,8 @@ public class GameController {
         updateHUD();
         checkGameEnd();
     }
+    
+    //hunterın vacuumu entity üzerine gelrise görünür olsun ayarı burada yapılır.
     private void updateEntities(double minX, double minY, double maxX, double maxY) {
         for (Entity entity : entities) {
             if (entity.isCaptured()) {
@@ -159,6 +163,8 @@ public class GameController {
                     || CollisionUtil.isEntityInsideVacuumCone(hunter, entity);
             entity.setVisible(visible);
 
+            
+            //oyuncu space bastığı esnada entity vacuum sınırları içerisinde ise shrink() metodu ile küçültülür.
             if (CollisionUtil.canVacuumEntity(hunter, entity)) {
                 boolean wasCaptured = entity.isCaptured();
 
@@ -169,6 +175,7 @@ public class GameController {
                 }
             }
 
+            //Hunter ile entity temas ederse canın azalmasını sağlar.
             if (CollisionUtil.isHunterCollidingWithEntity(hunter, entity)
                     && damageCooldownFrames == 0) {
 
@@ -222,6 +229,7 @@ public class GameController {
             secondTimer.stop();
         }
     }
+    //mouse hareketiyle vacuum yönünü ayarlar.
     public void handleMouseMoved(double mouseX, double mouseY) {
         if (hunter != null) {
             hunter.setMousePosition(mouseX, mouseY);
@@ -231,6 +239,8 @@ public class GameController {
     public void addScore(int points) {
         this.score += points;
     }
+    
+    //burası hunter kontrollerini alır ver hunter sınıfına iletir.
     public void handleInput(KeyCode code, boolean pressed) {
     	if (code == KeyCode.ESCAPE && pressed) {
     	    togglePause();
@@ -268,12 +278,14 @@ public class GameController {
 
         return String.format("%d:%02d", minutes, seconds);
     }
+    
+    //oyunun bitiminden sorumludur ve 3 ihtimal bulundurur.süre bitmesi, can bitmesi, ve tüm hayaletlerin yok edilmesi.
     private void checkGameEnd() {
         if (!hunter.isAlive()) {
             loseGame();
             return;
         }
-
+       
         boolean allCaptured = true;
 
         for (Entity entity : entities) {

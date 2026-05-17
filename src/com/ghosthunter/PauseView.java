@@ -10,70 +10,99 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+
+//Ali_Yüşa_Sezer_150124071
+//Ahmet_Kayra_Demirci-150124056
 public class PauseView extends StackPane {
-
-    public PauseView(SceneManager sceneManager,
-                        GameController gameController,
-                        int currentLevel) {
-
-    	Rectangle bg = new Rectangle();
-    	bg.widthProperty().bind(widthProperty());
-    	bg.heightProperty().bind(heightProperty());
-    	bg.setFill(Color.rgb(0, 0, 0, 0.6));
-
+    //oyunu durdurunca gelen ekran
+    public PauseView(SceneManager sceneManager, GameController gameController, int currentLevel) {
+      
+        Rectangle bg = new Rectangle(1024, 768);
+        bg.setFill(Color.rgb(0, 0, 0, 0.0));
+        
+        //butonların font ayarları
+        Font buttonF = Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"), 30);
+        if (buttonF == null) {
+            buttonF = Font.font("Arial", 30);
+        }
+        Font buttongp = Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"), 50);
+        if (buttongp == null) {
+            buttongp = Font.font("Arial", 30);
+        }
+        
+        //ekrana yazılan yazı
         Label title = new Label("GAME PAUSED");
-        Font spookyTitleFont = Font.loadFont(
-                getClass().getResourceAsStream("Creepster-Regular.ttf"),
-                48
+        title.setFont(buttongp);
+        title.setTextFill(Color.BLACK);
+        
+        // Butonların oluşturulması
+        Button resumeB = new Button("RESUME");
+        Button retryB = new Button("RETRY");
+        Button menuB = new Button("MAIN MENU");
+
+        
+        resumeB.setFont(buttonF);
+        retryB.setFont(buttonF);
+        menuB.setFont(buttonF);
+
+        resumeB.setPrefSize(200, 50);
+        retryB.setPrefSize(200, 50);
+        menuB.setPrefSize(200, 50);
+
+        //Butonların renkleri
+        Background defaultBg = new Background(new BackgroundFill(Color.PURPLE, null, null));
+        Background clickBg = new Background(new BackgroundFill(Color.WHITE, null, null));
+        resumeB.setBackground(defaultBg);
+        resumeB.setTextFill(Color.WHITE);
+        retryB.setBackground(defaultBg);
+        retryB.setTextFill(Color.WHITE);
+        menuB.setBackground(defaultBg);
+        menuB.setTextFill(Color.WHITE);
+
+        //Butonların anlık renkleri
+        resumeB.setOnMousePressed(e -> { 
+        	resumeB.setBackground(clickBg); resumeB.setTextFill(Color.RED); 
+        	}
+        );
+        resumeB.setOnMouseReleased(e -> { 
+        	resumeB.setBackground(defaultBg); resumeB.setTextFill(Color.WHITE); 
+        	}
+        );
+        retryB.setOnMousePressed(e -> { 
+        	retryB.setBackground(clickBg); retryB.setTextFill(Color.RED); 
+        	}
+        );
+        retryB.setOnMouseReleased(e -> { 
+        	retryB.setBackground(defaultBg); retryB.setTextFill(Color.WHITE); 
+        	}
+        );
+        menuB.setOnMousePressed(e -> { 
+        	menuB.setBackground(clickBg); menuB.setTextFill(Color.RED); 
+        	}
+        );
+        menuB.setOnMouseReleased(e -> { 
+        	menuB.setBackground(defaultBg); menuB.setTextFill(Color.WHITE); 
+        	}
         );
 
-        if (spookyTitleFont == null) {
-            spookyTitleFont = Font.font("Arial", 48);
-        }
-
-        title.setFont(spookyTitleFont);
-        title.setTextFill(Color.WHITE);
-
-        Button resumeBtn = new Button("RESUME");
-        Button retryBtn = new Button("RETRY");
-        Button menuBtn = new Button("MAIN MENU");
-        Font spookyButtonFont = Font.loadFont(
-                getClass().getResourceAsStream("Creepster-Regular.ttf"),
-                24
-        );
-
-        if (spookyButtonFont == null) {
-            spookyButtonFont = Font.font("Arial", 24);
-        }
-
-        resumeBtn.setFont(spookyButtonFont);
-        retryBtn.setFont(spookyButtonFont);
-        menuBtn.setFont(spookyButtonFont);
-        stylePauseButton(resumeBtn);
-        stylePauseButton(retryBtn);
-        stylePauseButton(menuBtn);
-
-        resumeBtn.setOnAction(e -> {
+        //Butonların aksiyonları
+        resumeB.setOnAction(e -> {
             gameController.resumeGame();
             ((StackPane)getParent()).getChildren().remove(this);
-        });
-
-        retryBtn.setOnAction(e -> {
+        }
+        );
+        retryB.setOnAction(e -> {
             gameController.stopGame("Retry");
             sceneManager.startLevel(currentLevel);
-        });
-
-        menuBtn.setOnAction(e -> {
+        }
+        );
+        menuB.setOnAction(e -> {
             gameController.stopGame("Main Menu");
             sceneManager.showMainMenu();
-        });
-
-        VBox layout = new VBox(20,
-                title,
-                resumeBtn,
-                retryBtn,
-                menuBtn);
-
+        }
+        );
+        //Butonların dizaynı
+        VBox layout = new VBox(20, title, resumeB, retryB, menuB);
         layout.setAlignment(Pos.CENTER);
 
         getChildren().addAll(bg, layout);

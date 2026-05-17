@@ -3,21 +3,18 @@ package com.ghosthunter;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-/**
- * Department of Computer Science & Engineering - CSE 1242 Term Project [cite: 8, 9, 10]
- * Submission Date: 17.05.2026 [cite: 11]
- * Entry class for feature-ui.
- */
+//Ali_Yüşa_Sezer_150124071
+//Arkada pencere açar
 public class Test extends Application {
 
     @Override
     public void start(Stage primaryStage) {
     	SceneManager sceneManager = new SceneManager(primaryStage);
         
-        // 2. İLK AÇILIŞTA TAM EKRAN OLSUN İSTİYORSAN BURADA TETİKLİYORSUN:
+        //Tam ekran yapar
         primaryStage.setFullScreen(true); 
         
-        // 3. Ana menüyü çağırıyoruz
+        // Ana menüyü çağırır
         sceneManager.showMainMenu();
     }
 

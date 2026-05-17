@@ -9,128 +9,129 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Point2D;
 import javafx.scene.image.ImageView;
 
-/**
- * Grup Projesi - SceneManager Sınıfı
- * Amaç: Tek Sahne (Single Scene) mimarisi ile tam ekrandan atma sorununu kökten çözmek.
- */
+//Ali_Yüşa_Sezer_150124071
+
 public class SceneManager {
-
-    private final Stage primaryStage;
-    private final Scene mainScene;       // Oyun boyunca TEK bir sahne olacak
-    private final StackPane mainRoot;     // Ekranların değişeceği ana taşıyıcı panel
+	//Pencere, sahne ve taşıyıcı
+    private final Stage primaryS;
+    private final Scene mainS;       
+    private final StackPane mainR;     
+    //Oyun çözünürlüğü
+    private final int windowW = 1024;
+    private final int windowH = 768;
     
-    private final int windowWidth = 1024;
-    private final int windowHeight = 768;
-
     private GameController gameController;
-
+    //Oyunun ana yeri 
     public SceneManager(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+        this.primaryS = primaryStage;
         
-        // 1. ADIM: Ana kök paneli ve tek olan sahnemizi oluşturuyoruz
-        this.mainRoot = new StackPane();
-        this.mainScene = new Scene(mainRoot, windowWidth, windowHeight);
+        //Sahneleri oluşturuyoruz
+        this.mainR = new StackPane();
+        this.mainS = new Scene(mainR, windowW, windowH);
         
-        // Sahneyi stage'e SADECE BİR KERE bağlıyoruz
-        this.primaryStage.setScene(mainScene);
-        this.primaryStage.setFullScreenExitHint("");
+        // Sahneyi pencereye 1 kez bağlıyoruz
+        this.primaryS.setScene(mainS);
+        this.primaryS.setFullScreenExitHint("");
     }
 
     public void showMainMenu() {
-        MainMenuView menuView = new MainMenuView(this);
+    	//Arayüz oluşturuyoruz
+        MainMenuView menuV = new MainMenuView(this);
         
-        // AKILLILIK: Sahneyi değiştirmiyoruz, sadece içindeki paneli değiştiriyoruz!
-        mainRoot.getChildren().setAll(menuView); 
+        //Arayüzü koyuyoruz
+        mainR.getChildren().setAll(menuV); 
         
-        primaryStage.setTitle("Ghost Hunter Inc.");
-        primaryStage.show();
+        primaryS.setTitle("Ghost Hunter Inc.");
+        primaryS.show();
     }
 
     public void showLevelSelection() {
-        LevelSelectView levelView = new LevelSelectView(this);
+        LevelSelectView levelV = new LevelSelectView(this);
         
-        // Eski ekranı temizler, seviye seçim ekranını içeriğe basar
-        mainRoot.getChildren().setAll(levelView); 
-        primaryStage.show();
+        // Eski arayüzü temizleyip yenisibi koyuyoruz
+        mainR.getChildren().setAll(levelV); 
+        primaryS.show();
     }
-
+    //Seçilen seviyeyi açar
     public void startLevel(int levelNumber) {
-        StackPane gameRootContainer = new StackPane();
-        gameRootContainer.setPrefSize(windowWidth, windowHeight);
-        gameRootContainer.setMinSize(windowWidth, windowHeight);
-        gameRootContainer.setMaxSize(windowWidth, windowHeight);
-
-        Pane mapPlayAreaPane = new Pane();
+        StackPane gameRC = new StackPane();
+        //nesneleri tutan konteynerler
+        gameRC.setPrefSize(windowW, windowH);
+        gameRC.setMinSize(windowW, windowH);
+        gameRC.setMaxSize(windowW, windowH);
+        //karakterlerin gezineceği kordinat sistemi
+        Pane mapPlayAP = new Pane();
+        //resim ayarları
         ImageView fullBackground = new ImageView();
         fullBackground.setPreserveRatio(false);
-        fullBackground.fitWidthProperty().bind(mainScene.widthProperty());
-        fullBackground.fitHeightProperty().bind(mainScene.heightProperty());
-        mapPlayAreaPane.setPrefSize(windowWidth, windowHeight);
-        mapPlayAreaPane.setMinSize(windowWidth, windowHeight);
-        mapPlayAreaPane.setMaxSize(windowWidth, windowHeight);
-
+        fullBackground.fitWidthProperty().bind(mainS.widthProperty());
+        fullBackground.fitHeightProperty().bind(mainS.heightProperty());
+        mapPlayAP.setPrefSize(windowW, windowH);
+        mapPlayAP.setMinSize(windowW, windowH);
+        mapPlayAP.setMaxSize(windowW, windowH);
+        //Harita görselinin seçilmesi
         try {
-            String imageFileName = "Level" + levelNumber + ".png"; 
-            Image mapImage = new Image(getClass().getResourceAsStream(imageFileName));
+            String imageFN = "Level" + levelNumber + ".png"; 
+            Image mapImage = new Image(getClass().getResourceAsStream(imageFN));
             fullBackground.setImage(mapImage);
         } catch (Exception e) {
-            if (levelNumber == 1) mapPlayAreaPane.setStyle("-fx-background-color: #2E1A47;"); 
-            else if (levelNumber == 2) mapPlayAreaPane.setStyle("-fx-background-color: #1A3636;"); 
-            else mapPlayAreaPane.setStyle("-fx-background-color: #3D0C02;"); 
+            if (levelNumber == 1) mapPlayAP.setStyle("-fx-background-color: #2E1A47;"); 
+            else if (levelNumber == 2) mapPlayAP.setStyle("-fx-background-color: #1A3636;"); 
+            else mapPlayAP.setStyle("-fx-background-color: #3D0C02;"); 
         }
 
+        //Göstergeleri yani HUD'u çağırır
         GameHUD gameHUD = new GameHUD();
-        gameRootContainer.getChildren().add(mapPlayAreaPane);
+        gameRC.getChildren().add(mapPlayAP);
 
-        gameHUD.getContainer().prefWidthProperty().bind(mainScene.widthProperty());
-        gameHUD.getContainer().prefHeightProperty().bind(mainScene.heightProperty());
+        gameHUD.getContainer().prefWidthProperty().bind(mainS.widthProperty());
+        gameHUD.getContainer().prefHeightProperty().bind(mainS.heightProperty());
 
-        // Otomatik Ölçekleme (Resize) bağlarını tek olan ana sahnemize (mainScene) bağlıyoruz
-        DoubleBinding scaleBinding = (DoubleBinding) Bindings.min(
-                mainScene.widthProperty().divide(windowWidth),
-                mainScene.heightProperty().divide(windowHeight)
-        );
-        gameRootContainer.scaleXProperty().bind(scaleBinding);
-        gameRootContainer.scaleYProperty().bind(scaleBinding);
+        // Otomatik ölçeklendirme
+        DoubleBinding scaleBinding = (DoubleBinding) Bindings.min(mainS.widthProperty().divide(windowW),mainS.heightProperty().divide(windowH));
+        //Oyun alanını orantılar
+        gameRC.scaleXProperty().bind(scaleBinding);
+        gameRC.scaleYProperty().bind(scaleBinding);
 
-        // KLAVYE VE FARE AYARLARINI ANA SAHNEYE BAĞLIYORUZ
-        gameController = new GameController(this, mapPlayAreaPane, gameHUD, gameRootContainer);
+        // Klavye ve fareyi ana ekrana bağlıyoruz
+        gameController = new GameController(this, mapPlayAP, gameHUD, gameRC);
         gameController.startLevel(levelNumber);
         
-        mainScene.setOnKeyPressed(e -> gameController.handleInput(e.getCode(), true));
-        mainScene.setOnKeyReleased(e -> gameController.handleInput(e.getCode(), false));
-        mainScene.setOnMouseMoved(e -> {
-            Point2D localPoint = mapPlayAreaPane.sceneToLocal(e.getSceneX(), e.getSceneY());
+        mainS.setOnKeyPressed(e -> gameController.handleInput(e.getCode(), true));
+        mainS.setOnKeyReleased(e -> gameController.handleInput(e.getCode(), false));
+        mainS.setOnMouseMoved(e -> {
+            Point2D localPoint = mapPlayAP.sceneToLocal(e.getSceneX(), e.getSceneY());
             gameController.handleMouseMoved(localPoint.getX(), localPoint.getY());
-        });
-        mainScene.setOnMouseDragged(e -> {
-            Point2D localPoint = mapPlayAreaPane.sceneToLocal(e.getSceneX(), e.getSceneY());
+        }
+        );
+        mainS.setOnMouseDragged(e -> {
+            Point2D localPoint = mapPlayAP.sceneToLocal(e.getSceneX(), e.getSceneY());
             gameController.handleMouseMoved(localPoint.getX(), localPoint.getY());
         });
 
-        // Ana kökü temizleyip oyun panelini basıyoruz
-        mainRoot.getChildren().setAll(fullBackground, gameRootContainer, gameHUD.getContainer());
-        primaryStage.show();
+        // Ana köke ekleme yapıyoruz
+        mainR.getChildren().setAll(fullBackground, gameRC, gameHUD.getContainer());
+        primaryS.show();
     }
-
+    //Kazandın ekranını basar
     public void triggerWinOverlay(StackPane gameRoot, int currentLevel) {
-        WinScreen winScreen = new WinScreen(this, currentLevel);
+        WinScreen winS = new WinScreen(this, currentLevel);
 
-        winScreen.prefWidthProperty().bind(mainScene.widthProperty());
-        winScreen.prefHeightProperty().bind(mainScene.heightProperty());
+        winS.prefWidthProperty().bind(mainS.widthProperty());
+        winS.prefHeightProperty().bind(mainS.heightProperty());
 
-        mainRoot.getChildren().add(winScreen);
+        mainR.getChildren().add(winS);
     }
-
+    //Kaybettin ekranını basar
     public void triggerLoseOverlay(StackPane gameRoot, int currentLevel, int score) {
-        LoseScreen loseScreen = new LoseScreen(this, currentLevel, score);
+    	LoseScreen loseS = new LoseScreen(this, currentLevel, score);
 
-        loseScreen.prefWidthProperty().bind(mainScene.widthProperty());
-        loseScreen.prefHeightProperty().bind(mainScene.heightProperty());
+        loseS.prefWidthProperty().bind(mainS.widthProperty());
+        loseS.prefHeightProperty().bind(mainS.heightProperty());
 
-        mainRoot.getChildren().add(loseScreen);
+        mainR.getChildren().add(loseS);
     }
     public StackPane getMainRoot() {
-        return mainRoot;
+        return mainR;
     }
 }

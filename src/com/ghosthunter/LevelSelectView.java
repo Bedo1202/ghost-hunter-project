@@ -1,10 +1,5 @@
 package com.ghosthunter;
 
-
-/**
- * Marmara University - CSE 1242 Term Project
- * LevelSelectView Sınıfı - Harita Görselleri ve Arka Plan Problemini Çözen Versiyon
- */
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -14,139 +9,135 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
-/**
- * Marmara University - CSE 1242 Term Project [cite: 7, 9]
- * LevelSelectView Sınıfı - Kartların İçine Harita Görsellerini Tam Ortalar
- */
+
+//Ali_Yüşa_Sezer_150124071
+
 public class LevelSelectView extends VBox {
 
+	//Ekran oluşturur
     private final SceneManager sceneManager;
 
     public LevelSelectView(SceneManager sceneManager) {
         this.sceneManager = sceneManager;
         
-        // 1. DÜZEN VE HİZALAMA AYARLARI
+        //Panel ayarları
         this.setAlignment(Pos.CENTER); 
         this.setSpacing(15); 
         this.setPadding(new Insets(20, 0, 20, 0));
 
-        // 2. ANA ARKA PLAN GÖRSELİ (LevelSelect.png)
+        //Arka plan görselini ayarlar
         try {
-            Image bg = new Image(getClass().getResourceAsStream("LevelSelect.png"));
-            BackgroundImage backgroundImage = new BackgroundImage(
-                bg,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(1024, 768, false, false, false, true)
-            );
-            this.setBackground(new Background(backgroundImage));
-        } catch (Exception e) {
-            this.setBackground(new Background(new BackgroundFill(Color.web("#150B24"), null, null)));
+            Image backG = new Image(getClass().getResourceAsStream("LevelSelect.png"));
+            
+            BackgroundSize bSize = new BackgroundSize(1.0, 1.0, true, true, false, false);
+            
+            BackgroundImage backgroundImage = new BackgroundImage(backG, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, 
+                BackgroundPosition.CENTER, bSize);
+                this.setBackground(new Background(backgroundImage));
+        } 
+        catch (Exception e) {
+            this.setBackground(new Background(new BackgroundFill(Color.PURPLE, null, null)));
         }
+        //Butonları yaratır
+        Button l1 = createLC("1", "Level1.png", 1);
+        Button l2 = createLC("2", "Level2.png", 2);
+        Button l3 = createLC("3", "Level3.png", 3);
 
-        // 3. SEVİYE KARTLARININ OLUŞTURULMASI (Görseller ve Sayılar Üst Üste)
-        Button lvl1 = createLevelCard("1", "Level1.png", 1);
-        Button lvl2 = createLevelCard("2", "Level2.png", 2);
-        Button lvl3 = createLevelCard("3", "Level3.png", 3);
-
-        // 4. "BACK TO MENU" BUTONU
-        Button backBtn = new Button("BACK TO MENU");
-        backBtn.setFont(Font.loadFont(
-                getClass().getResourceAsStream("Creepster-Regular.ttf"),
-                14
-        ));
-        backBtn.setPrefSize(180, 40);
-        
+        //ana menüye dönüş butonu
+        Button backB = new Button("BACK TO MENU");
+        backB.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"), 30));
+        backB.setPrefSize(250, 60);
+      
+        //Buton renkleri
         Background defaultBackBg = new Background(new BackgroundFill(Color.web("#800080"), null, null));
         Background clickBackBg = new Background(new BackgroundFill(Color.WHITE, null, null));
         
-        backBtn.setBackground(defaultBackBg);
-        backBtn.setTextFill(Color.WHITE);
+        backB.setBackground(defaultBackBg);
+        backB.setTextFill(Color.WHITE);
         
-        backBtn.setOnMousePressed(e -> {
-            backBtn.setBackground(clickBackBg);
-            backBtn.setTextFill(Color.RED); // [cite: 158]
-        });
-        backBtn.setOnMouseReleased(e -> {
-            backBtn.setBackground(defaultBackBg);
-            backBtn.setTextFill(Color.WHITE);
+        backB.setOnMousePressed(e -> {
+            backB.setBackground(clickBackBg);
+            backB.setTextFill(Color.RED); 
+        }
+        );
+        backB.setOnMouseReleased(e -> {
+            backB.setBackground(defaultBackBg);
+            backB.setTextFill(Color.WHITE);
             sceneManager.showMainMenu();
-        });
-
-        this.getChildren().addAll(lvl1, lvl2, lvl3, backBtn);
+        }
+        );
+        
+        this.getChildren().addAll(l1, l2, l3, backB);
     }
 
-    /**
-     * Döküman Sayfa 12 Kuralları: [cite: 166, 167, 168, 169]
-     * Harita görseli ve sayı StackPane ile üst üste bindirilir.
-     */
-    private Button createLevelCard(String levelNumber, String imagePath, int levelNum) {
-        // Butonun metnini boş bırakıyoruz çünkü StackPane ile içeriği kendimiz dolduracağız
+    //Butonların oluşturulduğu yer
+    private Button createLC(String levelNumber, String imagePath, int levelNum) {
+        //Buton yaratılması
         Button card = new Button();
-        card.setPrefSize(160, 95); // Dökümandaki dikdörtgen kart boyutları 
+        card.setPrefSize(250, 150); 
 
-        // Renk Tanımlamaları [cite: 167, 168, 169]
-        Color normalPurple = Color.web("#800080");     
-        Color lighterPurple = Color.web("#BA55D3");    
+        
+        Color normalPurple = Color.PURPLE;     
+        Color lighterPurple = Color.MEDIUMPURPLE;    
         Color clickedWhite = Color.WHITE;              
 
-        // Katmanlı Düzen: Resim altta, yazı onun üstünde olacak
-        StackPane cardContent = new StackPane();
-        cardContent.setAlignment(Pos.CENTER);
+        //Elamanları sıralar
+        StackPane cardC = new StackPane();
+        cardC.setAlignment(Pos.CENTER);
 
-        // 1. Katman: Küçük Harita Resmi 
+        //Butonlara resimlerini ekler 
         try {
             Image img = new Image(getClass().getResourceAsStream(imagePath));
             ImageView imgView = new ImageView(img);
-            imgView.setFitWidth(130);  // Mor kutunun içine tam oturacak genişlik
-            imgView.setFitHeight(70);  // Mor kutunun içine tam oturacak yükseklik
-            imgView.setPreserveRatio(false); // Tam sığdırma zorlaması
-            cardContent.getChildren().add(imgView);
+            //Resmi boyutlandırır
+            imgView.setFitWidth(200);  
+            imgView.setFitHeight(120);  
+            imgView.setPreserveRatio(false); 
+            cardC.getChildren().add(imgView);
         } catch (Exception e) {
-            System.out.println(imagePath + " harita resmi bulunamadı.");
+        	System.err.println("WARNİNG: " + imagePath + " is not found!");
         }
 
-        // 2. Katman: Resmin Tam Üzerine Binecek Olan Beyaz Numara
+        //Butonlara numaraları yazar
         Label numLabel = new Label(levelNumber);
-        numLabel.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"),
-                32));
+        numLabel.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"), 45));
         numLabel.setTextFill(Color.WHITE);
-        cardContent.getChildren().add(numLabel);
+        cardC.getChildren().add(numLabel);
 
-        // Oluşturduğumuz bu katmanlı yapıyı butonun içine grafik olarak gömüyoruz
-        card.setGraphic(cardContent);
-
-        // İlk Görünüm Ayarı [cite: 167]
+        //Butonları düzenler
+        card.setGraphic(cardC);
         card.setBackground(new Background(new BackgroundFill(normalPurple, new CornerRadii(6), null)));
 
-        // KURAL 1: Hover-over (Fare üzerine gelince) açık mor olur [cite: 168]
+        // Fare üstüne gelirse renk değişimi
         card.setOnMouseEntered(e -> {
             if (card.getBackground().getFills().get(0).getFill() != clickedWhite) {
                 card.setBackground(new Background(new BackgroundFill(lighterPurple, new CornerRadii(6), null)));
             }
-        });
+        }
+        );
 
         card.setOnMouseExited(e -> {
             if (card.getBackground().getFills().get(0).getFill() != clickedWhite) {
                 card.setBackground(new Background(new BackgroundFill(normalPurple, new CornerRadii(6), null)));
             }
-        });
+        }
+        );
 
-        // KURAL 2: Clicked State (Tıklanınca) arka plan beyaz olur [cite: 169]
+        // Fare tıklarsa renk değişimi
         card.setOnMousePressed(e -> {
             card.setBackground(new Background(new BackgroundFill(clickedWhite, new CornerRadii(6), null)));
-            numLabel.setTextFill(Color.web("#800080")); // Arka plan beyaz olunca yazı mor olsun ki okunsun
-        });
+            numLabel.setTextFill(Color.PURPLE); // 
+        }
+        );
 
-        // KURAL 3: Released (Tıklama bırakılınca) seviye haritasını yükler [cite: 169]
+        // Fare tıklaması gidince haritayı yükler
         card.setOnMouseReleased(e -> {
             card.setBackground(new Background(new BackgroundFill(normalPurple, new CornerRadii(6), null)));
             numLabel.setTextFill(Color.WHITE);
-            sceneManager.startLevel(levelNum); // Seviyeyi başlatır [cite: 169]
-        });
+            sceneManager.startLevel(levelNum);
+        }
+        );
 
         return card;
     }
