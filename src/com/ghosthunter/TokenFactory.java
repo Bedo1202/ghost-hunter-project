@@ -3,9 +3,7 @@ package com.ghosthunter;
 //tokenların random yerlerde çıkmasını sağlayan sınıf
 import java.util.Random;
 public class TokenFactory {
-    private static Random random = new Random();
-    TokenFactory() {}
-    
+    private static Random random = new Random();   
     public static Token createRandomToken(double minX, double minY, double maxX, double maxY) {
         double x = randomBetween(minX, maxX);
         double y = randomBetween(minY, maxY);

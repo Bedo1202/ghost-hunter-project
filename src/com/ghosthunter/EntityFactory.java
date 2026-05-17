@@ -7,7 +7,6 @@ import java.util.Random;
 //entityleri random pozisyonlarda oluşturmak için kullanılan factory
 public class EntityFactory {
     private static Random random = new Random();
-    private EntityFactory() {}
     //playable areada random bir yerde ghost oluşturuyor
     public static Ghost createRandomGhost(double minX, double minY, double maxX, double maxY) {
         double x = randomBetween(minX, maxX);
