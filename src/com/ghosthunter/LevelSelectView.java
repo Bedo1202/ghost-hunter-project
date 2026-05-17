@@ -54,7 +54,10 @@ public class LevelSelectView extends VBox {
 
         // 4. "BACK TO MENU" BUTONU
         Button backBtn = new Button("BACK TO MENU");
-        backBtn.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        backBtn.setFont(Font.loadFont(
+                getClass().getResourceAsStream("Creepster-Regular.ttf"),
+                14
+        ));
         backBtn.setPrefSize(180, 40);
         
         Background defaultBackBg = new Background(new BackgroundFill(Color.web("#800080"), null, null));
@@ -108,7 +111,8 @@ public class LevelSelectView extends VBox {
 
         // 2. Katman: Resmin Tam Üzerine Binecek Olan Beyaz Numara
         Label numLabel = new Label(levelNumber);
-        numLabel.setFont(Font.font("Impact", FontWeight.BOLD, 32));
+        numLabel.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"),
+                32));
         numLabel.setTextFill(Color.WHITE);
         cardContent.getChildren().add(numLabel);
 
