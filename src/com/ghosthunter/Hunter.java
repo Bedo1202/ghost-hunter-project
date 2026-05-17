@@ -1,11 +1,11 @@
 package com.ghosthunter;
-
+//150124056/AHMET KAYRA DEMİRCİ
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.Group;
 import javafx.scene.shape.Polygon;
-
+//variablelar sonradan configden de alınabilir
 public class Hunter {
     private double x;
     private double y;
@@ -23,29 +23,25 @@ public class Hunter {
     private boolean scanning;
     private boolean eyeModeActive;
     private int eyeModeTimer;
-    private final Circle view;
+    private Circle view;
 	private int damageColorTimer;
-	private final Group viewGroup;
-	private final Polygon vacuumCone;
+	private Group viewGroup;
+	private Polygon vacuumCone;
 	private double mouseX;
 	private double mouseY;
+	//constructor ile basit şekil ve vakum konisi
     public Hunter(double x, double y) {
         this.x = x;
         this.y = y;
-
-        
         view = new Circle(x, y, 20);
         view.setFill(Color.ORANGE);
-
         vacuumCone = new Polygon();
         vacuumCone.setFill(Color.rgb(120, 0, 180, 0.30));
         vacuumCone.setStroke(Color.PURPLE);
         vacuumCone.setStrokeWidth(2);
         vacuumCone.setVisible(false);
-
         viewGroup = new Group(vacuumCone, view);
-        direction = "RIGHT";
-
+        direction = "RIGHT"; //null kalmasın
         updateVacuumCone();
     }
     
@@ -58,101 +54,90 @@ public class Hunter {
         updateViewPosition();
         updateVacuumCone();
     }
-
+    //kritik hareket metodu
     private void updateMovement() {
 		if (movingUp) {
     	    y -= speed;
     	    direction = "UP";
     	}
-
     	if (movingDown) {
     	    y += speed;
     	    direction = "DOWN";
     	}
-
     	if (movingLeft) {
     	    x -= speed;
     	    direction = "LEFT";
     	}
-
     	if (movingRight) {
     	    x += speed;
     	    direction = "RIGHT";
     	}
     }
+    //vakum konisi update i
     private void updateVacuumCone() {
+    	//scan range token ile değişince sorun çıkarmasın 
     	double length = scanRange;
     	double width = scanRange * 0.60;
-
+    	// Önceki framedeki cone noktaları temizleniyor.
         vacuumCone.getPoints().clear();
-
+        //space basılı değilse ya da enerji bittiyse update duruyor
         if (!scanning || vacuumEnergy <= 0) {
             vacuumCone.setVisible(false);
             return;
         }
-
         vacuumCone.setVisible(true);
-
+        //mouse ile uzaklık için işlemler(CollisionUtil de yaptığım gibi)
         double dx = mouseX - x;
         double dy = mouseY - y;
-
         double distance = Math.sqrt(dx * dx + dy * dy);
-
         if (distance == 0) {
             return;
         }
-
         double unitX = dx / distance;
         double unitY = dy / distance;
-
         double perpX = -unitY;
         double perpY = unitX;
-
+        //bunlar üçgenle hunter üst üste binmesin diye
         double startX = x + unitX * 20;
         double startY = y + unitY * 20;
-
+        //koninin uç noktası
         double tipX = x + unitX * length;
         double tipY = y + unitY * length;
-
+        //sol köşe
         double leftX = tipX + perpX * width / 2;
         double leftY = tipY + perpY * width / 2;
-
+        //sağ köşe
         double rightX = tipX - perpX * width / 2;
         double rightY = tipY - perpY * width / 2;
-
-        vacuumCone.getPoints().addAll(
-                startX, startY,
-                leftX, leftY,
-                rightX, rightY
-        );
+        vacuumCone.getPoints().addAll(startX, startY,leftX, leftY,rightX, rightY);
     }
+    //space basılıysa enerji düşür
     private void updateVacuumEnergy() {
         if (scanning && vacuumEnergy > 0) {
             vacuumEnergy--;
         } else if (!scanning && vacuumEnergy < maxVacuumEnergy) {
             vacuumEnergy++;
         }
-
         if (vacuumEnergy <= 0) {
             vacuumEnergy = 0;
             scanning = false;
         }
     }
-
+ //hasar alınca renk değişimi update i
  private void updateDamageColor() {
      if (damageColorTimer > 0) {
          damageColorTimer--;
-
+         //renk normale dönsün
          if (damageColorTimer == 0) {
              view.setFill(Color.ORANGE);
          }
      }
  }
+ //eye token için update
     private void updateEyeMode() {
         if (!eyeModeActive) {
             return;
         }
-
         eyeModeTimer--;
 
         if (eyeModeTimer <= 0) {
@@ -160,12 +145,12 @@ public class Hunter {
             eyeModeTimer = 0;
         }
     }
-
+//konum
     private void updateViewPosition() {
         view.setCenterX(x);
         view.setCenterY(y);
     }
-
+//damage yeme
     public void takeDamage(int amount) {
         health -= amount;
 
@@ -177,21 +162,20 @@ public class Hunter {
         view.setFill(Color.RED);
         damageColorTimer = 20;
     }
-
+//health token
     public void applyHealthToken(int amount) {
         health += amount;
-
+//maxın üstüne çıkmaması için
         if (health > maxHealth) {
             health = maxHealth;
         }
-
         view.setFill(Color.ORANGE);
     }
-
+    //range token
     public void applyRangeToken(int amount) {
         scanRange += amount;
     }
-
+    //eye mode açıyor
     public void applyEyeToken(int duration) {
         eyeModeActive = true;
         eyeModeTimer = duration;
@@ -216,7 +200,7 @@ public class Hunter {
             y = maxY - radius;
         }
     }
-
+//getter/setterlar
     public Node getView() {
         return viewGroup;
     }
@@ -282,19 +266,15 @@ public class Hunter {
             this.scanning = scanning;
         }
     }
-
     public void setMovingUp(boolean movingUp) {
         this.movingUp = movingUp;
     }
-
     public void setMovingDown(boolean movingDown) {
         this.movingDown = movingDown;
     }
-
     public void setMovingLeft(boolean movingLeft) {
         this.movingLeft = movingLeft;
     }
-
     public void setMovingRight(boolean movingRight) {
         this.movingRight = movingRight;
     }
