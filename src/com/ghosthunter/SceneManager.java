@@ -61,18 +61,18 @@ public class SceneManager {
         gameRootContainer.setMaxSize(windowWidth, windowHeight);
 
         Pane mapPlayAreaPane = new Pane();
+        ImageView fullBackground = new ImageView();
+        fullBackground.setPreserveRatio(false);
+        fullBackground.fitWidthProperty().bind(mainScene.widthProperty());
+        fullBackground.fitHeightProperty().bind(mainScene.heightProperty());
         mapPlayAreaPane.setPrefSize(windowWidth, windowHeight);
         mapPlayAreaPane.setMinSize(windowWidth, windowHeight);
         mapPlayAreaPane.setMaxSize(windowWidth, windowHeight);
 
         try {
             String imageFileName = "Level" + levelNumber + ".png"; 
-            Image mapImage = new Image(getClass().getResourceAsStream(imageFileName), windowWidth, windowHeight, false, true);
-            ImageView mapView = new ImageView(mapImage);
-            mapView.setFitWidth(windowWidth);
-            mapView.setFitHeight(windowHeight);
-            mapView.setPreserveRatio(false);
-            mapPlayAreaPane.getChildren().add(mapView);
+            Image mapImage = new Image(getClass().getResourceAsStream(imageFileName));
+            fullBackground.setImage(mapImage);
         } catch (Exception e) {
             if (levelNumber == 1) mapPlayAreaPane.setStyle("-fx-background-color: #2E1A47;"); 
             else if (levelNumber == 2) mapPlayAreaPane.setStyle("-fx-background-color: #1A3636;"); 
@@ -80,7 +80,10 @@ public class SceneManager {
         }
 
         GameHUD gameHUD = new GameHUD();
-        gameRootContainer.getChildren().addAll(mapPlayAreaPane, gameHUD.getContainer());
+        gameRootContainer.getChildren().add(mapPlayAreaPane);
+
+        gameHUD.getContainer().prefWidthProperty().bind(mainScene.widthProperty());
+        gameHUD.getContainer().prefHeightProperty().bind(mainScene.heightProperty());
 
         // Otomatik Ölçekleme (Resize) bağlarını tek olan ana sahnemize (mainScene) bağlıyoruz
         DoubleBinding scaleBinding = (DoubleBinding) Bindings.min(
@@ -106,17 +109,28 @@ public class SceneManager {
         });
 
         // Ana kökü temizleyip oyun panelini basıyoruz
-        mainRoot.getChildren().setAll(gameRootContainer);
+        mainRoot.getChildren().setAll(fullBackground, gameRootContainer, gameHUD.getContainer());
         primaryStage.show();
     }
 
     public void triggerWinOverlay(StackPane gameRoot, int currentLevel) {
         WinScreen winScreen = new WinScreen(this, currentLevel);
-        gameRoot.getChildren().add(winScreen);
+
+        winScreen.prefWidthProperty().bind(mainScene.widthProperty());
+        winScreen.prefHeightProperty().bind(mainScene.heightProperty());
+
+        mainRoot.getChildren().add(winScreen);
     }
 
     public void triggerLoseOverlay(StackPane gameRoot, int currentLevel, int score) {
         LoseScreen loseScreen = new LoseScreen(this, currentLevel, score);
-        gameRoot.getChildren().add(loseScreen);
+
+        loseScreen.prefWidthProperty().bind(mainScene.widthProperty());
+        loseScreen.prefHeightProperty().bind(mainScene.heightProperty());
+
+        mainRoot.getChildren().add(loseScreen);
+    }
+    public StackPane getMainRoot() {
+        return mainRoot;
     }
 }

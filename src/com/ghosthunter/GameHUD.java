@@ -27,7 +27,7 @@ public class GameHUD {
     private final double barHeight = 220;
     public GameHUD() {
         hudContainer = new BorderPane();
-        hudContainer.setPadding(new Insets(20));
+        hudContainer.setPadding(new Insets(20, 5, 20, 5));
         hudContainer.setPickOnBounds(false); // Fare tıklamalarını engellemez
 
         initTopCenterHUD();
