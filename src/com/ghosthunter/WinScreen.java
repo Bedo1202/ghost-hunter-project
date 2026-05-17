@@ -8,16 +8,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-/**
- * Grup Projesi - WinScreen Sınıfı
- * Amaç: PDF Sayfa 12'deki yarı saydam "YOU WIN!" panelinin ve buton animasyonunun oluşturulması.
- */
+//Ali_Yüşa_Sezer_150124071
 public class WinScreen extends VBox {
 
     public WinScreen(SceneManager sceneManager, int currentLevel) {
-        // 1. PANEL YERLEŞİM AYARLARI
-        this.setAlignment(Pos.CENTER); // Tüm yazıları ve butonu panelin tam ortasına hizalar
-        this.setSpacing(15); // Elemanların arasındaki dikey boşluk
+        // Panel ayarları
+        this.setAlignment(Pos.CENTER); 
+        this.setSpacing(15); 
 
         // 2. YARI SAYDAM SİYAH ARKA PLAN (PDF İsteri)
         // Color.rgb(0, 0, 0, 0.75) -> Sondaki 0.75 değeri %75 opaklık sağlar. 
@@ -39,7 +36,7 @@ public class WinScreen extends VBox {
         // 5. "NEXT LEVEL" BUTONU VE TIKLAMA RENK DEĞİŞİMİ
         boolean isFinalLevel = currentLevel >= 3;
         Button nextLevelBtn = new Button(isFinalLevel ? "MAIN MENU" : "NEXT LEVEL");
-        nextLevelBtn.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        nextLevelBtn.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"),14));
         nextLevelBtn.setPrefSize(160, 40); // Dikdörtgen buton boyutları
 
         // Renk Tanımlamaları

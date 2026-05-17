@@ -16,63 +16,49 @@ public class MainMenuView extends VBox {
     public MainMenuView(SceneManager sceneManager) {
         this.sceneManager = sceneManager;
         
-        // 1. DÜZEN AYARLARI
-        // Görselde butonlar sol tarafta olduğu için hizalamayı sola aldık
+        //Butonların konum ayarları
         this.setAlignment(Pos.CENTER_LEFT); 
-        this.setSpacing(15); // Butonlar arası boşluk
-        this.setPadding(new Insets(100, 0, 0, 150)); // Butonları soldan biraz içeri ittik
+        this.setSpacing(15); 
+        this.setPadding(new Insets(100, 0, 0, 150)); 
 
-        // 2. ARKA PLAN GÖRSELİ (menu_bg.png)
+        //Arka plan
         try {
             Image bg = new Image(getClass().getResourceAsStream("Mainmenu.png"));
-            BackgroundImage backgroundImage = new BackgroundImage(
-                bg,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(100, 100, true, true, false, true)
-            );
-            this.setBackground(new Background(backgroundImage));
+            BackgroundImage bgı = new BackgroundImage(bg,BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,new BackgroundSize(100, 100, true, true, false, true));
+            this.setBackground(new Background(bgı));
         } catch (Exception e) {
-            // Eğer resim yüklenirken bir sorun çıkarsa oyunun çökmesini engeller ve düz mor renk boyar
-            this.setBackground(new Background(new BackgroundFill(Color.web("#150B24"), null, null)));
+            
+            this.setBackground(new Background(new BackgroundFill(Color.PURPLE, null, null)));
         }
 
-        // 3. BUTONLARIN OLUŞTURULMASI
-        Button startBtn = createStyledButton("START GAME");
-        Button levelBtn = createStyledButton("SELECT LEVEL");
-        Button exitBtn = createStyledButton("EXIT");
+        // Butonların oluşturulması
+        Button startB = createSB("START GAME");
+        Button levelB = createSB("SELECT LEVEL");
+        Button exitB = createSB("EXIT");
 
-        // 4. BUTON AKSİYONLARI
-        startBtn.setOnAction(e -> sceneManager.startLevel(1));
-        levelBtn.setOnAction(e -> sceneManager.showLevelSelection());
-        exitBtn.setOnAction(e -> System.exit(0));
-
-        this.getChildren().addAll(startBtn, levelBtn, exitBtn);
+        // Butonların yapacakları
+        startB.setOnAction(e -> sceneManager.startLevel(1));
+        levelB.setOnAction(e -> sceneManager.showLevelSelection());
+        exitB.setOnAction(e -> System.exit(0));
+        //Kutulara ekler
+        this.getChildren().addAll(startB, levelB, exitB);
     }
 
-    /**
-     * PDF İsteri: Buton tıklandığında arka plan BEYAZ, yazı KIRMIZI olmalı.
-     */
-    private Button createStyledButton(String text) {
-        Button btn = new Button(text);
-
-        Font buttonFont = Font.loadFont(
-                getClass().getResourceAsStream("Creepster-Regular.ttf"),
-                24
-        );
-
-        if (buttonFont == null) {
-            buttonFont = Font.font("Arial", 24);
+   
+    private Button createSB(String text) {
+        //Buton yazısı ayarları
+    	Button btn = new Button(text);
+        Font buttonF = Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"),30);
+        if (buttonF == null) {
+            buttonF = Font.font("Arial", 30);
         }
-
-        btn.setFont(buttonFont);
-
-        btn.setPrefSize(180, 40);
-
-        Background defaultBg = new Background(new BackgroundFill(Color.web("#9400D3"), null, null));
+        //Buton ayarları
+        btn.setFont(buttonF);
+        btn.setPrefSize(200, 50);
+        Background defaultBg = new Background(new BackgroundFill(Color.PURPLE, null, null));
         Background clickBg = new Background(new BackgroundFill(Color.WHITE, null, null));
-
+        //Butonların anlık durumları
         btn.setBackground(defaultBg);
         btn.setTextFill(Color.WHITE);
 

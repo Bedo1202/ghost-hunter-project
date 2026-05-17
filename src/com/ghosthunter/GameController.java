@@ -72,7 +72,7 @@ public class GameController {
             activeLevel = config.level3;
         }
 
-        remainingTime = activeLevel.timeLimit;
+        remainingTime = activeLevel.süreSınırı;
 
         setupObjects();
         updateHUD();
@@ -93,7 +93,7 @@ public class GameController {
         playAreaPane.getChildren().add(hunter.getView());
 
         entities = EntityFactory.createEntities(
-                activeLevel.ghostCount,
+                activeLevel.hayaletSayısı,
                 activeLevel.ripperCount,
                 activeLevel.wispCount,
                 minX,

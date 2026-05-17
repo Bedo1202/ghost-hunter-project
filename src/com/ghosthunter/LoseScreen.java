@@ -8,76 +8,72 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-/**
- * Grup Projesi - LoseScreen Sınıfı
- * Amaç: PDF Sayfa 13'teki tamamen BEYAZ arka planlı, kırmızı yazılı Game Over ekranı ve buton animasyonları.
- */
+//Ali_Yüşa_Sezer_150124071
 public class LoseScreen extends VBox {
 
     public LoseScreen(SceneManager sceneManager, int currentLevel, int finalScore) {
-        // 1. PANEL YERLEŞİM AYARLARI
-        this.setAlignment(Pos.CENTER); // Tüm elemanları ekranın tam ortasına hizalar
-        this.setSpacing(25); // Elemanların arasındaki dikey boşluk miktarı
+        //Panel ayarları
+        this.setAlignment(Pos.CENTER); 
+        this.setSpacing(25); 
 
-        // 2. SAF BEYAZ ARKA PLAN (PDF Sayfa 13 İsteri)
+        //Arka plan
         this.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 
-        // 3. "GAME OVER" BAŞLIĞI (Kırmızı ve Kalın)
+        //Oyun bitti yazısı
         Label gameOverLabel = new Label("GAME OVER");
-        gameOverLabel.setFont(Font.font("Impact", FontWeight.BOLD, 52)); // PDF'teki heybetli font
+        gameOverLabel.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"),50)); 
         gameOverLabel.setTextFill(Color.RED);
 
-        // 4. "FINAL SCORE" YAZISI (Kırmızı ve Kalın)
-        Label scoreLabel = new Label("FINAL SCORE: " + finalScore);
-        scoreLabel.setFont(Font.font("Impact", FontWeight.BOLD, 24));
-        scoreLabel.setTextFill(Color.RED);
+        //Skor yazısı
+        Label scoreL = new Label("FINAL SCORE: " + finalScore);
+        scoreL.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"),30));
+        scoreL.setTextFill(Color.RED);
 
-        // 5. BUTONLARIN YAN YANA DİZİLMESİ İÇİN HBOX
-        HBox buttonLayout = new HBox(20); // Butonlar arası yatay boşluk
-        buttonLayout.setAlignment(Pos.CENTER);
+        // Butonları yan yana dizer
+        HBox buttonL = new HBox(20); 
+        buttonL.setAlignment(Pos.CENTER);
 
-        // Butonların Oluşturulması
-        Button retryBtn = createLoseButton("RETRY");
-        Button menuBtn = createLoseButton("MAIN MENU");
+        // Butonların yaratılması
+        Button retryBtn = createLB("RETRY");
+        Button menuBtn = createLB("MAIN MENU");
 
-        // Buton Aksiyonlarının SceneManager'a Bağlanması
-        retryBtn.setOnAction(e -> sceneManager.startLevel(currentLevel)); // Aynı seviyeyi yeniden başlatır
-        menuBtn.setOnAction(e -> sceneManager.showMainMenu()); // Ana menüye geri döner
+        // Butonları ScaneManager'e bağlar
+        retryBtn.setOnAction(e -> sceneManager.startLevel(currentLevel)); 
+        menuBtn.setOnAction(e -> sceneManager.showMainMenu()); 
 
-        buttonLayout.getChildren().addAll(retryBtn, menuBtn);
+        buttonL.getChildren().addAll(retryBtn, menuBtn);
 
-        // Tüm katmanları ana dikey kutuya (VBox) ekliyoruz
-        this.getChildren().addAll(gameOverLabel, scoreLabel, buttonLayout);
+        // Kutuya ekler
+        this.getChildren().addAll(gameOverLabel, scoreL, buttonL);
     }
 
-    /**
-     * PDF İsteri: Tıklandığında arka plan mordan beyaza, yazı kırmızıya döner.
-     */
-    private Button createLoseButton(String text) {
-        Button btn = new Button(text);
-        btn.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        btn.setPrefSize(140, 42); // Dikdörtgen buton boyutları
+    //Butonları yaratır
+    private Button createLB(String text) {
+        //Buton özellikleri
+    	Button b = new Button(text);
+        b.setFont(Font.loadFont(getClass().getResourceAsStream("Creepster-Regular.ttf"),25));
+        b.setPrefSize(150, 50); 
 
-        // Renk Tanımlamaları
-        Background purpBg = new Background(new BackgroundFill(Color.web("#800080"), null, null)); // Varsayılan Mor
-        Background clickBg = new Background(new BackgroundFill(Color.WHITE, null, null)); // Tıklanınca Beyaz
+        // Butonların renkleri
+        Background purpB = new Background(new BackgroundFill(Color.PURPLE, null, null)); 
+        Background clickB = new Background(new BackgroundFill(Color.WHITE, null, null)); 
 
-        // Butonun İlk Hali: Mor arka plan, Beyaz yazı
-        btn.setBackground(purpBg);
-        btn.setTextFill(Color.WHITE);
+        //Butonun anlık renk ayarları
+        b.setBackground(purpB);
+        b.setTextFill(Color.WHITE);
 
-        // TIKLANMA ANI (Mouse Pressed): Arka plan BEYAZ, yazı KIRMIZI olur
-        btn.setOnMousePressed(e -> {
-            btn.setBackground(clickBg);
-            btn.setTextFill(Color.RED);
-        });
+        b.setOnMousePressed(e -> {
+            b.setBackground(clickB);
+            b.setTextFill(Color.RED);
+        }
+        );
 
-        // TIKLAMAYI BIRAKMA ANI (Mouse Released): Eski mor haline geri döner
-        btn.setOnMouseReleased(e -> {
-            btn.setBackground(purpBg);
-            btn.setTextFill(Color.WHITE);
-        });
+        b.setOnMouseReleased(e -> {
+            b.setBackground(purpB);
+            b.setTextFill(Color.WHITE);
+        }
+        );
 
-        return btn;
+        return b;
     }
 }

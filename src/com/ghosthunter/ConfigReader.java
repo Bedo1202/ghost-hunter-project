@@ -1,18 +1,20 @@
 package com.ghosthunter;
+
 import java.io.File;
 import java.util.Scanner;
 
 //Bedirhan_Acarturk_150124052
+//Ahmet_Kayra_Demirci_150124056
 //bu classı congig.txt doyasını okuyabilmek için oluşturdum.
 public class ConfigReader {
 	
 	//bakılması gereken dosyayı gösterir ve varsayılan değerlerle şimdilik bir nesne oluşturur.
 	public static GameConfig readConfig(String filePath) {
 	GameConfig config = new GameConfig();	
-	File file = new File(filePath);
+	File dosya = new File(filePath);
 	
 	//Dosyadaki stringleri okuyup integera çevirir ve bu esnada dosyanın boş olma ihtimaline karşılık exceptions fırlatır.
-	try (Scanner scanner= new Scanner(file)){
+	try (Scanner scanner= new Scanner(dosya)){
 		while(scanner.hasNextLine()) {
 			String line= scanner.nextLine().trim();
 			if(line.isEmpty() || !line.contains(":"))continue;
@@ -25,7 +27,7 @@ public class ConfigReader {
 		}
 		
 	} catch (Exception e) {
-		System.err.println("KONFİGÜRASYON DOSYASI OKUNURKEN HATA OLUŞTU" + e.getMessage());
+		System.out.println("KONFİGÜRASYON DOSYASI OKUNURKEN HATA OLUŞTU" + e.getMessage());
 		
 	}
 	return config;
@@ -44,8 +46,8 @@ public class ConfigReader {
             case "level_1_playable_area_y": config.level1.areaY = value; break;
             case "level_1_playable_area_width": config.level1.width = value; break;
             case "level_1_playable_area_height": config.level1.height = value; break;
-            case "level_1_time": config.level1.timeLimit = value; break;
-            case "level_1_ghosts": config.level1.ghostCount = value; break;
+            case "level_1_time": config.level1.süreSınırı = value; break;
+            case "level_1_ghosts": config.level1.hayaletSayısı = value; break;
             case "level_1_rippers": config.level1.ripperCount = value; break;
             case "level_1_wisps": config.level1.wispCount = value; break;
 
@@ -55,8 +57,8 @@ public class ConfigReader {
             case "level_2_playable_area_height": config.level2.height = value; break;
             case "level_2_wisps": config.level2.wispCount = value; break;
             case "level_2_playable_area_width": config.level2.width = value; break;
-            case "level_2_time": config.level2.timeLimit = value; break;
-            case "level_2_ghosts": config.level2.ghostCount = value; break;
+            case "level_2_time": config.level2.süreSınırı = value; break;
+            case "level_2_ghosts": config.level2.hayaletSayısı = value; break;
             case "level_2_rippers": config.level2.ripperCount = value; break;
 
             // Seviye 3 parametrelerini dosyadan okuyup GameConfig sınıfındaki değişkenlere eşitler.
@@ -64,8 +66,8 @@ public class ConfigReader {
             case "level_3_playable_area_y": config.level3.areaY = value; break;
             case "level_3_playable_area_width": config.level3.width = value; break;
             case "level_3_playable_area_height": config.level3.height = value; break;
-            case "level_3_time": config.level3.timeLimit = value; break;
-            case "level_3_ghosts": config.level3.ghostCount = value; break;
+            case "level_3_time": config.level3.süreSınırı = value; break;
+            case "level_3_ghosts": config.level3.hayaletSayısı = value; break;
             case "level_3_rippers": config.level3.ripperCount = value; break;
             case "level_3_wisps": config.level3.wispCount = value; break;
 
