@@ -3,9 +3,11 @@ package com.ghosthunter;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.Group;
 import javafx.scene.shape.Polygon;
 import javafx.scene.effect.Glow;
+import javafx.scene.transform.Rotate;
 
 public class Ripper extends Entity {
 
@@ -19,28 +21,47 @@ public class Ripper extends Entity {
     Group spikesGroup = new Group();
 
     int numSpikes = 12;
+    double radiusOuterX =45.0;
+    double radiusOuterY = 32.0;
+    
+    double radiusInnerX = 26.0;
+    double radiusInnerY = 18.0;
+    
+    double baseHalfWidthAngle = 15.0;
 
     for (int i = 0; i < numSpikes; i++) {
-        double angle = i * (360.0 / numSpikes);
-
+       double angleCenter = i* (360.0/ numSpikes);
+       double angleLeft = angleCenter - baseHalfWidthAngle;
+       double angleRight = angleCenter +baseHalfWidthAngle;
+       
+       double x1 = radiusOuterX * Math.cos(Math.toRadians(angleCenter));
+       double y1 = radiusOuterY* Math.sin(Math.toRadians(angleCenter));
+       
+       double x2 = radiusInnerX * Math.cos(Math.toRadians(angleLeft));
+       double y2 = radiusInnerY * Math.sin(Math.toRadians(angleLeft));
+       
+       double x3 = radiusInnerX * Math.cos(Math.toRadians(angleRight));
+       double y3 = radiusInnerY * Math.sin(Math.toRadians(angleRight));
         Polygon spike = new Polygon();
         spike.getPoints().addAll(
-                0.0, -22.0,
-                -5.0, -12.0,
-                5.0, -12.0
+                x1, y1,
+                x2, y2,
+                x3,y3
         );
 
         spike.setFill(Color.PURPLE);
-        spike.setRotate(angle);
-
         spikesGroup.getChildren().add(spike);
+      
     }
 
-    Circle core = new Circle(0, 0, 13, Color.BLACK);
-    Circle leftEye = new Circle(-4, -2, 2.5, Color.RED);
-    Circle rightEye = new Circle(4, -2, 2.5, Color.RED);
+    Ellipse backgroundEllipse = new Ellipse(0.0,0.0, 26.0, 18.0);
+    backgroundEllipse.setFill(Color.PURPLE);
+    Circle coreCircle = new Circle(0.0,0.0,16.0,Color.BLACK);
+    
+    Circle leftEye = new Circle(-5, -2, 2.5, Color.RED);
+    Circle rightEye = new Circle(5, -2, 2.5, Color.RED);
 
-    view.getChildren().addAll(spikesGroup, core, leftEye, rightEye);
+    view.getChildren().addAll(spikesGroup, backgroundEllipse, coreCircle, leftEye, rightEye);
     view.setEffect(new Glow(0.60));
 
     updateViewPosition();
@@ -61,6 +82,6 @@ public class Ripper extends Entity {
 
     @Override
     public double getCollisionRadius() {
-    return 18;
+    return 24;
     }
 }

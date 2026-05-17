@@ -4,12 +4,14 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.animation.Animation;
+import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
 import javafx.scene.effect.Glow;
 import javafx.util.Duration;
 
@@ -20,43 +22,44 @@ public class Wisp extends Entity {
     public Wisp(double x, double y) {
         super(x, y, 0.9, 1.1, 30);
         view = new Group();
+        Circle mainBody = new Circle(0,0,24,Color.RED);
+        
+        Group leftEye = new Group();
+        Circle leftEyeOuter = new Circle(-6,0,4.5,Color.ORANGE);
+        Circle leftEyeInner = new Circle(-6, 0, 2.5, Color.YELLOW);
+        leftEye.getChildren().addAll(leftEyeOuter, leftEyeInner);
+        
+        Group rightEye = new Group();
+        Circle rightEyeOuter = new Circle(6, 0, 4.5, Color.ORANGE);
+        Circle rightEyeInner = new Circle(6, 0, 2.5, Color.YELLOW);
+        rightEye.getChildren().addAll(rightEyeOuter, rightEyeInner);
 
-        RadialGradient glow = new RadialGradient(
-                0,
-                0,
-                0,
-                0,
-                25,
-                false,
-                CycleMethod.NO_CYCLE,
-                new Stop(0, Color.YELLOW),
-                new Stop(0.5, Color.ORANGE),
-                new Stop(1, Color.TRANSPARENT)
-        );
-
-        Circle outerCircle = new Circle(0, 0, 25, glow);
-        Circle innerCircle = new Circle(0, 0, 10, Color.RED);
-        innerCircle.setOpacity(0.7);
 
         Group rectsGroup = new Group();
+        int numRectangles = 6;
 
-        for (int i = 0; i < 4; i++) {
-            Rectangle rect = new Rectangle(-3, -30, 5, 10);
-            rect.setFill(Color.ORANGERED);
+        for (int i = 0; i < numRectangles; i++) {
+            Rectangle ray = new Rectangle(-1, -40, 2, 12);
+            ray.setFill(Color.RED);
+            
+            Rotate pivotRotation = new Rotate(i*(360.0 / numRectangles), 0, 0);
+           
+            ray.getTransforms().add(pivotRotation);
+                    
+            rectsGroup.getChildren().add(ray);
+        }  
+           
 
-            Group wrapper = new Group(rect);
-            wrapper.setRotate(i * 90);
+          
 
-            rectsGroup.getChildren().add(wrapper);
-        }
-
-        RotateTransition rt = new RotateTransition(Duration.seconds(3), rectsGroup);
+        RotateTransition rt = new RotateTransition(Duration.seconds(4), rectsGroup);
         rt.setByAngle(360);
         rt.setCycleCount(Animation.INDEFINITE);
+        rt.setInterpolator(Interpolator.LINEAR);
         rt.play();
 
-        view.getChildren().addAll(outerCircle, innerCircle, rectsGroup);
-        view.setEffect(new Glow(0.80));
+        view.getChildren().addAll(mainBody,leftEye, rightEye, rectsGroup);
+        view.setEffect(new Glow(0.85));
 
         updateViewPosition();
         view.setVisible(false);
@@ -75,6 +78,6 @@ public class Wisp extends Entity {
 
     @Override
     public double getCollisionRadius() {
-        return 25;
+        return 26;
     }
 }	

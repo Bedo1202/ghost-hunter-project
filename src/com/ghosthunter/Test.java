@@ -12,7 +12,12 @@ public class Test extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        SceneManager sceneManager = new SceneManager(primaryStage);
+    	SceneManager sceneManager = new SceneManager(primaryStage);
+        
+        // 2. İLK AÇILIŞTA TAM EKRAN OLSUN İSTİYORSAN BURADA TETİKLİYORSUN:
+        primaryStage.setFullScreen(true); 
+        
+        // 3. Ana menüyü çağırıyoruz
         sceneManager.showMainMenu();
     }
 

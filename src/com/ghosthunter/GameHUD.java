@@ -67,14 +67,14 @@ public class GameHUD {
                 16));
         vacuumTitle.setTextFill(Color.WHITE);
 
-        Rectangle vacuumBackground = new Rectangle(barWidth, barHeight);
+        Rectangle vacuumBackground = new Rectangle(barWidth, barHeight -7);
         vacuumBackground.setFill(Color.BLACK);
         vacuumBackground.setStroke(Color.WHITE);
         vacuumBackground.setStrokeWidth(3);
         vacuumBackground.setArcWidth(12);
         vacuumBackground.setArcHeight(12);
 
-        vacuumFill = new Rectangle(barWidth - 8, barHeight - 8);
+        vacuumFill = new Rectangle(barWidth -4, barHeight -4);
         vacuumFill.setFill(Color.PURPLE);
         vacuumFill.setArcWidth(8);
         vacuumFill.setArcHeight(8);
@@ -100,14 +100,14 @@ public class GameHUD {
                 16));
         healthTitle.setTextFill(Color.WHITE);
 
-        Rectangle healthBackground = new Rectangle(barWidth, barHeight);
+        Rectangle healthBackground = new Rectangle(barWidth, barHeight -7);
         healthBackground.setFill(Color.BLACK);
         healthBackground.setStroke(Color.WHITE);
         healthBackground.setStrokeWidth(3);
         healthBackground.setArcWidth(12);
         healthBackground.setArcHeight(12);
 
-        healthFill = new Rectangle(barWidth - 8, barHeight - 8);
+        healthFill = new Rectangle(barWidth -4, barHeight -4);
         healthFill.setFill(Color.RED);
         healthFill.setArcWidth(8);
         healthFill.setArcHeight(8);
