@@ -317,7 +317,7 @@ public class GameController {
         }
 
         PauseView overlay = new PauseView(sceneManager, this, currentLevel);
-        sceneManager.getMainRoot().getChildren().add(overlay);
+        sceneManager.getMainRoot().getChildren().add(overlay);	
     }
 
     public void resumeGame() {
