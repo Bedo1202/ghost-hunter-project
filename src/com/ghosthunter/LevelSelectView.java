@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+
 
 //Ali_Yüşa_Sezer_150124071
 
@@ -29,15 +29,16 @@ public class LevelSelectView extends VBox {
         //Arka plan görselini ayarlar
         try {
             Image backG = new Image(getClass().getResourceAsStream("LevelSelect.png"));
-            BackgroundImage backgroundImage = new BackgroundImage(backG,BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,new BackgroundSize(1024, 768, false, false, false, true));
-            this.setBackground(new Background(backgroundImage));
-        
+            
+            BackgroundSize bSize = new BackgroundSize(1.0, 1.0, true, true, false, false);
+            
+            BackgroundImage backgroundImage = new BackgroundImage(backG, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, 
+                BackgroundPosition.CENTER, bSize);
+                this.setBackground(new Background(backgroundImage));
         } 
         catch (Exception e) {
             this.setBackground(new Background(new BackgroundFill(Color.PURPLE, null, null)));
         }
-
         //Butonları yaratır
         Button l1 = createLC("1", "Level1.png", 1);
         Button l2 = createLC("2", "Level2.png", 2);

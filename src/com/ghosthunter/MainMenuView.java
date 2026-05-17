@@ -7,8 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.image.ImageView;
 public class MainMenuView extends VBox {
 
     private final SceneManager sceneManager;
@@ -23,15 +21,18 @@ public class MainMenuView extends VBox {
 
         //Arka plan
         try {
-            Image bg = new Image(getClass().getResourceAsStream("Mainmenu.png"));
-            BackgroundImage bgı = new BackgroundImage(bg,BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,new BackgroundSize(100, 100, true, true, false, true));
-            this.setBackground(new Background(bgı));
-        } catch (Exception e) {
+            Image backG = new Image(getClass().getResourceAsStream("MainMenu.png"));
             
+            BackgroundSize bSize = new BackgroundSize(1.0, 1.0, true, true, false, false);
+            BackgroundImage backgroundImage = new BackgroundImage(backG,BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, bSize);
+                
+            this.setBackground(new Background(backgroundImage));
+        } 
+        catch (Exception e) {
+            // Eğer resim bulunamazsa veya yüklenirken bir hata oluşursa ekran mor renge boyanır
             this.setBackground(new Background(new BackgroundFill(Color.PURPLE, null, null)));
         }
-
         // Butonların oluşturulması
         Button startB = createSB("START GAME");
         Button levelB = createSB("SELECT LEVEL");

@@ -6,7 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+
 
 //Ali_Yüşa_Sezer_150124071
 public class LoseScreen extends VBox {
