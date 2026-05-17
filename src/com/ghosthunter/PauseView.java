@@ -16,8 +16,10 @@ public class PauseView extends StackPane {
                         GameController gameController,
                         int currentLevel) {
 
-        Rectangle bg = new Rectangle(1024, 768);
-        bg.setFill(Color.rgb(0, 0, 0, 0.6));
+    	Rectangle bg = new Rectangle();
+    	bg.widthProperty().bind(widthProperty());
+    	bg.heightProperty().bind(heightProperty());
+    	bg.setFill(Color.rgb(0, 0, 0, 0.6));
 
         Label title = new Label("GAME PAUSED");
         Font spookyTitleFont = Font.loadFont(

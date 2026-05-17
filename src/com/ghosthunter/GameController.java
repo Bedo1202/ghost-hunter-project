@@ -85,9 +85,9 @@ public class GameController {
     	playAreaPane.getChildren().removeIf(node -> !(node instanceof ImageView));
 
         double minX = activeLevel.areaX;
-        double minY = activeLevel.areaY;
+        double minY = activeLevel.areaY +40;
         double maxX = activeLevel.areaX + activeLevel.width;
-        double maxY = activeLevel.areaY + activeLevel.height;
+        double maxY = activeLevel.areaY + activeLevel.height -40;
 
         hunter = new Hunter((minX + maxX) / 2, (minY + maxY) / 2);
         playAreaPane.getChildren().add(hunter.getView());
@@ -130,9 +130,9 @@ public class GameController {
         hunter.update();
 
         double minX = activeLevel.areaX;
-        double minY = activeLevel.areaY;
+        double minY = activeLevel.areaY+40;
         double maxX = activeLevel.areaX + activeLevel.width;
-        double maxY = activeLevel.areaY + activeLevel.height;
+        double maxY = activeLevel.areaY + activeLevel.height-40;
 
         hunter.keepInsideBounds(minX, minY, maxX, maxY);
 
@@ -317,7 +317,7 @@ public class GameController {
         }
 
         PauseView overlay = new PauseView(sceneManager, this, currentLevel);
-        gameRoot.getChildren().add(overlay);
+        sceneManager.getMainRoot().getChildren().add(overlay);
     }
 
     public void resumeGame() {
