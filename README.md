@@ -5,6 +5,9 @@ A 2D game developed with Java and JavaFX by a three-member team as a first-year 
 ## Gameplay
 
 The player uses a vacuum to shrink and eliminate ghosts within its effective range while avoiding damage from ghosts. Movement and vacuum direction must be coordinated to survive.
+## Screenshot
+
+![Ghost Hunter gameplay showing ghosts, score, health and vacuum indicators](gameplay.png.png)
 
 ## Controls
 
