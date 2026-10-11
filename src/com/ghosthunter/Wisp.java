@@ -1,5 +1,6 @@
 package com.ghosthunter;
-
+//Bedirhan Acartürk/150124071
+//Ahmet Kayra Demirci/150124056
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;

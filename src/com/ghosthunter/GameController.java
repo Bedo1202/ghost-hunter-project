@@ -1,5 +1,6 @@
 package com.ghosthunter;
-
+//Bedirhan Acartürk/150124052
+//Ahmet Kayra Demirci/150124056
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;

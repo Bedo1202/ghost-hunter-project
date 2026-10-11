@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Scanner;
 
 //Bedirhan_Acarturk_150124052
-//Ahmet_Kayra_Demirci_150124056
 //bu classı congig.txt doyasını okuyabilmek için oluşturdum.
 public class ConfigReader {
 	

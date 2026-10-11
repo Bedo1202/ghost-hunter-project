@@ -1,5 +1,5 @@
 package com.ghosthunter;
-
+//Ali Yüşa Sezer/150124071
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
